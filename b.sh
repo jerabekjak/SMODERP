@@ -25,9 +25,9 @@ python main.py \
 - \
 indata/srazka.txt \
 30 \
-15 \
+120 \
 00.0  \
-- \
+10.0 \
 out \
 shallowandrillsurface \
 false \
@@ -38,6 +38,6 @@ false \
 - \
 False \
 true  \
-indata/dp_vse.save \
+indata/nucice_rillsheet_dem20m.save \
 roff \
 true
