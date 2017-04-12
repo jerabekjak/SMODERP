@@ -80,9 +80,19 @@ if __name__ == "__main__":
 
 
   #jj tady se nastavuje max_delta_t
+<<<<<<< HEAD
   #sys.argv.append(1.0)
 
 
   sys.argv.append(sys.path[0]+os.sep+'prt_times.in')
+=======
+  #sys.argv.append(30.0)
+  
+  #print constants.PARAMETER_MAX_DELTA_T
+  #sys.exit()
+  
+  sys.argv.append('')
+  #sys.argv.append('')
+>>>>>>> origin/prekopacijcyklus
   import main_src.runoff
 
