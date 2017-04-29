@@ -11,11 +11,15 @@ def update_hb(loc_V_to_rill,rillRatio,l,b,ratio, ppp=False):
     raw_input()
   newb = math.sqrt(V/(rillRatio*l))
   #if ppp :  print 'zvetsuje', newb, b, V
-  if newb > b :
-    b = newb
-    h = V/(b*l)
+  if (V>0) :
+    if newb > b :
+      b = newb
+      h = V/(b*l)
+    else:
+      h = V/(b*l)
   else:
     h = V/(b*l)
+    
   return h, b
 
 
