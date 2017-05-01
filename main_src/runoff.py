@@ -163,11 +163,11 @@ while ( total_time < end_time ):
       ratio_tmp = ratio
 
       
-      ratio, v_sheet, v_rill, curr_rain, tz = time_step.do_flow( surface, subsurface, delta_t, Globals, mat_efect_vrst, ratio, courant, itera, total_time, tz, sr )
+      v_sheet, v_rill, curr_rain, tz = time_step.do_flow( surface, subsurface, delta_t, Globals, mat_efect_vrst, courant, itera, total_time, tz, sr )
 
       delta_t_tmp = delta_t
 
-      delta_t, ratio = courant.courant(curr_rain,delta_t,spix,ratio)
+      delta_t, surface = courant.courant(curr_rain,delta_t,spix,surface)
       
       
 
@@ -209,10 +209,10 @@ while ( total_time < end_time ):
           if surface.arr[i][j].h_total_new > surface.arr[i][j].h_crit :
             surface.arr[i][j].state = 1
             
-        if surface.arr[i][j].state == 1 : 
-          if surface.arr[i][j].h_total_new < surface.arr[i][j].h_total_pre : 
-            surface.arr[i][j].h_last_state1  = surface.arr[i][j].h_total_pre
-            surface.arr[i][j].state = 2
+        #if surface.arr[i][j].state == 1 : 
+          #if surface.arr[i][j].h_total_new < surface.arr[i][j].h_total_pre : 
+            #surface.arr[i][j].h_last_state1  = surface.arr[i][j].h_total_pre
+            #surface.arr[i][j].state = 2
             
         if surface.arr[i][j].state == 2 :
           if surface.arr[i][j].h_total_new > surface.arr[i][j].h_last_state1 : 

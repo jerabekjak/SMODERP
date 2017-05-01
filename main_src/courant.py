@@ -107,12 +107,25 @@ class Courant():
     if rill_courant > self.cour_most_rill:
         self.cour_most_rill = rill_courant
 
-
+  
+  
+  
+  
+  
+  def maxratioposition(self,sur):
+    maxr = 0
+    
+    for i in sur.rr :
+      for j in sur.rc[i] :
+        if sur.arr[i][j].ratio > maxr :
+          maxr = sur.arr[i][j].ratio
+          
+    return maxr      
   ## Returns the adjusted/unchanged time step after a time step computation is completed.
   #
   #  Also returns the ratio for the rill computation division.
   #
-  def courant(self,rainfall,delta_t,efect_vrst,ratio):
+  def courant(self,rainfall,delta_t,efect_vrst,sur):
 
 
     # ratio se muze zmensit  a max_delta_t_mult zvetsit
@@ -122,9 +135,18 @@ class Courant():
     # to je ale reseno lokalne
     # v  ./main_src/processes/rill.py
     #
+    maxr = self.maxratioposition(sur)
+    maxrpos = []
+
+    for i in sur.rr :
+      for j in sur.rc[i] :
+        if sur.arr[i][j].ratio==maxr : 
+          maxrpos.append([i,j])
+          
     if (self.cour_most_rill < 0.1) :
-      ratio = max(1,ratio-1) # ratio nemuze byt mensi nez 1
-      if ratio == 1 :
+      for ij in maxrpos:
+        sur.arr[i][j].ratio = max(1,sur.arr[i][j].ratio-1) # ratio nemuze byt mensi nez 1
+      if maxr == 1 :
         self.max_delta_t_mult = 1.0
       else :
         self.max_delta_t_mult = min(1.0, self.max_delta_t_mult*1/(0.9)) # max_delta_t_mult nemuze byt vetsi nez 1.0
@@ -136,8 +158,9 @@ class Courant():
     # proto se zmensuje max_delta_t_mult
     # ktery nasobi vysledne delta
     #
-    if ((ratio > self.maxratio) or (self.cour_most_rill > 1.0)) :
-      ratio = self.maxratio
+    if ((maxr > self.maxratio) or (self.cour_most_rill > 1.0)) :
+      for ij in maxrpos:
+        sur.arr[i][j].ratio = self.maxratio
       #ratio = 1
       self.max_delta_t_mult *= 0.9
 
@@ -154,7 +177,7 @@ class Courant():
       # max_delta_t_mult se meni podle ryh, vyse v teto funkci
       #
       if (self.cour_speed==0.0):
-        return self.max_delta_t*self.max_delta_t_mult, ratio
+        return self.max_delta_t*self.max_delta_t_mult, sur
 
       dt = round((efect_vrst*self.cour_crit*self.cour_coef)/self.cour_speed,4)
 
@@ -165,7 +188,7 @@ class Courant():
       #return dt*self.max_delta_t_mult, ratio
       #return min(dt,self.max_delta_t*self.max_delta_t_mult), ratio
       #print 'asdf', self.cour_speed, dt, self.max_delta_t_mult
-      return min(dt*self.max_delta_t_mult,self.max_delta_t*self.max_delta_t_mult), ratio
+      return min(dt*self.max_delta_t_mult,self.max_delta_t*self.max_delta_t_mult), sur
 
     # pokud je courant v povolenem rozmezi
     # skontrolje se pouze pokud neni vetsi nez maxdt * max_delta_t_mult
@@ -174,10 +197,10 @@ class Courant():
       #print 'fdafdsfasdfadsfadsfadsfaf'
       #return delta_t, ratio
       #print 'asdf', dt, dt*self.max_delta_t_mult, ratio
-      if ((ratio <= self.maxratio) and (self.cour_most_rill < 0.5)) :
-        return delta_t, ratio
+      if ((maxr <= self.maxratio) and (self.cour_most_rill < 0.5)) :
+        return delta_t, sur
       else:
-        return delta_t*self.max_delta_t_mult, ratio
+        return delta_t*self.max_delta_t_mult, sur
 
 
     prt.error('courant.cour() missed all its time step conditions\n no rule to preserve or change the time step!')

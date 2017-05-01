@@ -8,7 +8,8 @@ import main_src.io_functions.prt                  as prt
 
 prtTimes = get_argv(constants.PARAMETER_PRINT_TIME)
 
-
+print prtTimes
+print
 
 if prtTimes :
   class TimesPrt():

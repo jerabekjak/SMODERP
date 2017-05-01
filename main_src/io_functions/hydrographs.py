@@ -115,12 +115,12 @@ class Hydrographs:
         header += '# Time[s];deltaTime[s];Rainfall[m];Water_level_[m];Sheet_Flow[m3/s];Sheet_V_runoff[m3];Sheet_V_rest[m3];Infiltration[m];Surface_retetion[m];State;V_inflow[m3];Wleveltotal[m]'
         iSurface += 1
         if rill :
-          header += ';WlevelRill[m];Rill_width[m];Rill_flow[m3/s];Rill_V_runoff[m3];Rill_V_rest;Surface_Flow[m3/s];Surface_V_runoff[m3]'
+          header += ';WlevelRill[m];Rill_width[m];Rill_flow[m3/s];Rill_V_runoff[m3];Rill_V_rest;Surface_Flow[m3/s];Surface_V_runoff[m3];ratio[m3]'
         header += ';SurfaceBil[m3]'
         if subflow :
           header += ';Sub_Water_level_[m];Sub_Flow_[m3/s];Sub_V_runoff[m3];Sub_V_rest[m3];Percolation[];exfiltration[]'
         if extraout :
-          header += ';V_to_rill.m3.;ratio;courant;courantrill;iter'
+          header += ';V_to_rill.m3.;courant;courantrill;iter'
         header += '\n'
         self.header.append(header)
 
@@ -178,7 +178,6 @@ class Hydrographs:
           line += subsurface.return_str_vals(l,m,sep,dt) + sep
           if extraout :
             line += str(surface.arr[l][m].V_to_rill) + sep
-            line += str(ratio) + sep
             line += str(courant) + sep
             line += str(courantRill) + sep
             line += str(iter_)

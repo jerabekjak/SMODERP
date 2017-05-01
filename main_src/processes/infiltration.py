@@ -18,8 +18,9 @@ def philip_infiltration(soil,bil):
   for z in combinatIndex:
     if soil == z[0]:
       infiltration = z[3]
-      if bil < 0:
+      if bil < -1e-12:
         print ("tady5")
+        print bil
       if infiltration > bil:
         infiltration = bil
         bil = 0

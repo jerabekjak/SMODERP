@@ -164,7 +164,8 @@ class Cumulative(CumulativeSubsurface if subflow == True else CumulativeSubsurfa
             11 : 'b_rill',
             12 : 'inflow_sur',
             13 : 'sur_ret',
-            14 : 'V_sur_r'
+            14 : 'V_sur_r',
+            15 : 'maxratio'
             }
 
             #12 : 'v_rill',
@@ -187,7 +188,8 @@ class Cumulative(CumulativeSubsurface if subflow == True else CumulativeSubsurfa
             11 : 'AreaRill',
             12 : 'CumVInL3',
             13 : 'SurRet',
-            14 : 'CumVRestL3'
+            14 : 'CumVRestL3',
+            15 : 'maxratio'
             }
             #12 : 'MaxVeloRill',
 
@@ -234,6 +236,7 @@ class Cumulative(CumulativeSubsurface if subflow == True else CumulativeSubsurfa
     self.v_rill =  np.zeros([r,c],float)
     ## maximum surface retention [m]
     self.sur_ret=  np.zeros([r,c],float)
+    self.maxratio=  np.ones([r,c],int)
 
     
     super(Cumulative, self).__init__()
@@ -274,7 +277,8 @@ class Cumulative(CumulativeSubsurface if subflow == True else CumulativeSubsurfa
         self.h_rill[i][j]  = surface.h_rill
         self.b_rill[i][j]  = surface.b
         self.q_rill[i][j]  = q_rill
-
+      if surface.ratio > self.maxratio[i][j] :
+        self.maxratio[i][j] = surface.ratio
 
     self.update_cumulative_sur(i,j,subsurface.arr[i][j],subsurface.q_subsurface)
 

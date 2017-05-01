@@ -53,7 +53,7 @@ class SurArrs :
     self.rillWidth   =      float(0)
     self.V_to_rill   =      float(0)
     self.h_last_state1 =    float(0)
-
+    self.ratio         =    int(1)
 
 ## Documentation for a class Surface.
 #
@@ -96,7 +96,7 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
 
     if self.rill_computing :
       #';Rill_size;Rill_flow;Rill_V_runoff;Rill_V_rest'
-      line += sep + str(arr.h_rill) + sep + str(arr.rillWidth) + sep + str(arr.V_runoff_rill/dt) + sep + str(arr.V_runoff_rill) + sep + str(arr.V_rill_rest) + sep + str(arr.V_runoff/dt + arr.V_runoff_rill/dt) + sep + str(arr.V_runoff+arr.V_runoff_rill)
+      line += sep + str(arr.h_rill) + sep + str(arr.rillWidth) + sep + str(arr.V_runoff_rill/dt) + sep + str(arr.V_runoff_rill) + sep + str(arr.V_rill_rest) + sep + str(arr.V_runoff/dt + arr.V_runoff_rill/dt) + sep + str(arr.V_runoff+arr.V_runoff_rill) + sep + str(arr.ratio)
     #bil_  = arr.inflow_tm - arr.V_runoff - arr.V_runoff_rill - arr.cur_sur_ret*self.pixel_area - arr.V_rest + arr.V_rest_pre - arr.infiltration*self.pixel_area - arr.V_rill_rest + arr.V_rill_rest_pre
     bil_  = arr.h_total_pre*self.pixel_area + arr.cur_rain*self.pixel_area + arr.inflow_tm - (arr.V_runoff + arr.V_runoff_rill + arr.infiltration*self.pixel_area) - (arr.cur_sur_ret*self.pixel_area) - arr.h_total_new*self.pixel_area #<< + arr.V_rest + arr.V_rill_rest) + (arr.V_rest_pre + arr.V_rill_rest_pre)
     #bil_  = arr.inflow_tm - (arr.V_runoff + arr.infiltration*self.pixel_area) - (arr.cur_sur_ret*self.pixel_area + arr.V_rest) + (arr.V_rest_pre)
@@ -108,9 +108,9 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
 
 ## Calculates the sheet and rill flow.
 #
-def __runoff(i,j,sur,dt,efect_vrst,ratio) :
+def __runoff(i,j,sur,dt,efect_vrst) :
   
-  h_tota_pre = sur.h_total_pre
+  h_total_pre = sur.h_total_pre
   h_crit     = sur.h_crit
   state      = sur.state
   
@@ -128,12 +128,12 @@ def __runoff(i,j,sur,dt,efect_vrst,ratio) :
 
 
   if sur.state > 0 :
-    q_rill, v_rill, ratio, rill_courant = rill_runoff(i,j,sur,dt,efect_vrst,ratio)
+    q_rill, v_rill, rill_courant = rill_runoff(i,j,sur,dt,efect_vrst)
   else:
-    q_rill, v_rill, ratio, rill_courant = 0, 0, ratio, 0.0
+    q_rill, v_rill, rill_courant = 0, 0, 0.0
 
   #print q_sheet
-  return q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant
+  return q_sheet, v_sheet, q_rill, v_rill, rill_courant
 
 
 
@@ -143,7 +143,7 @@ def __runoff(i,j,sur,dt,efect_vrst,ratio) :
 
 def __runoff_zero_compType(i,j,sur,dt,efect_vrst,ratio) :
 
-  h_tota_pre = sur.h_total_pre
+  h_total_pre = sur.h_total_pre
   h_crit     = sur.h_crit
   state      = sur.state
   
@@ -204,7 +204,7 @@ def sheet_runoff(sur,dt):
 
   return q_sheet
 
-def rill_runoff(i,j,sur,dt,efect_vrst,ratio):
+def rill_runoff(i,j,sur,dt,efect_vrst):
   ppp = False
   
 
@@ -217,7 +217,7 @@ def rill_runoff(i,j,sur,dt,efect_vrst,ratio):
   sur.V_rill_rest, \
   q_rill, \
   v_rill, \
-  ratio, \
+  sur.ratio, \
   rill_courant = rill.rillCalculations(sur,
                                         pixel_area,
                                         efect_vrst,
@@ -225,13 +225,13 @@ def rill_runoff(i,j,sur,dt,efect_vrst,ratio):
                                         mat_n[i][j],
                                         mat_slope[i][j],
                                         dt,
-                                        ratio,ppp)
+                                        sur.ratio,ppp)
 
 
 
   sur.V_to_rill = V_to_rill
   
-  return q_rill, v_rill, ratio, rill_courant
+  return q_rill, v_rill, rill_courant
 
 
 

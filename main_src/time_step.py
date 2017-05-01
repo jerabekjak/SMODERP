@@ -145,7 +145,7 @@ class TimeStep:
 
   
   
-  def do_flow(self,surface, subsurface,delta_t,G, mat_efect_vrst, ratio, courant,itera, total_time, tz, sr) :
+  def do_flow(self,surface, subsurface,delta_t,G, mat_efect_vrst,  courant,itera, total_time, tz, sr) :
     
     """
     global infilt_capa
@@ -194,7 +194,7 @@ class TimeStep:
 
         else:
 
-          q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant = runoff(i,j,surface.arr[i][j],delta_t, mat_efect_vrst[i][j], ratio)
+          q_sheet, v_sheet, q_rill, v_rill, rill_courant = runoff(i,j,surface.arr[i][j],delta_t, mat_efect_vrst[i][j])
           subsurface.runoff(i,j,delta_t, mat_efect_vrst[i][j])
 
         q_surface = q_sheet+q_rill
@@ -204,7 +204,7 @@ class TimeStep:
         #print surface.arr[i][j].h_sheet, surface.arr[i][j].h_total_pre, v, q_sheet, surface.arr[i][j].V_runoff
         courant.CFL(i,j,surface.arr[i][j].h_total_pre,v,delta_t,mat_efect_vrst[i][j],co, rill_courant)
        
-    return ratio, v_sheet, v_rill, rainfall, tz
+    return v_sheet, v_rill, rainfall, tz
     
   
   

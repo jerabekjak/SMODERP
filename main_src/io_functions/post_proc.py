@@ -147,7 +147,7 @@ else:
     
     main_output = [3,4,5,6,7,12,13,14]  #jj vyznam najdes v class Cumulative mezi class Cumulative a def__init__
     if isRill : 
-      main_output += [8,9,10,11]
+      main_output += [8,9,10,11,15]
     if subflow :
       main_output += [14,15,16,17,18]
     if extraOutput == True :    #jj tady jen pokud chceme se i ten zbytek extraOutput je zatim definovan  na zacatku class_main_arrays
