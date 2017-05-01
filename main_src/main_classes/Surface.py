@@ -78,7 +78,7 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
         #self.arr[i][j] = SurArrs(sur_ret,mat_inf_index[i][j],mat_hcrit[i][j],mat_aa[i][j],mat_b[i][j])
         self.arr[i][j] = SurArrs(sur_ret,mat_inf_index[i][j],0.0015,mat_aa[i][j],mat_b[i][j])
 
-    raw_input('hcrit na tvrdo')
+
     self.rill_computing          = isRill
     #self.shallowSurfaceKinematic = surface.shallowSurfaceKinematic
     #self.rillCalculations        = rill.rillCalculations

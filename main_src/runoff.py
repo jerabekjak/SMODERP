@@ -283,7 +283,7 @@ if platform.system() == "Linux" :
 
 
 
-
+prt.message('\n\n\n\n\n\n !!!!!!!!hcrit na tvrdo!!!!!!!!! \n\n\n\n\n\n')
 
 
 
