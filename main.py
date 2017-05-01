@@ -67,15 +67,15 @@ if __name__ == "__main__":
 
   #sys.argv.append(sys.path[0]+os.sep+'DS_plochamalyNx.save')
 
-  sys.argv.append(sys.path[0]+os.sep+'DS.save')
+  #sys.argv.append(sys.path[0]+os.sep+'DS.save')
   # full - full computation
   # dpre - data_preparation
   # roff - runoff
   #sys.argv.append('roff')
   #sys.argv.append('dpre')
-  sys.argv.append('full')
+  #sys.argv.append('full')
 
-  sys.argv.append('true'); logical_argv(constants.PARAMETER_DEBUG_PRT)
+  #sys.argv.append('true'); logical_argv(constants.PARAMETER_DEBUG_PRT)
 
 
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
   #sys.argv.append(10.0)
 
 
-  sys.argv.append(sys.path[0]+os.sep+'prt_times.in')
+  sys.argv.append('')
   import main_src.runoff
 
