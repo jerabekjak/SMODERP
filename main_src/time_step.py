@@ -28,13 +28,17 @@ max_infilt_capa = 0.000
 #
 class TimeStep:
 
-  #def __init__(self):
+  def __init__(self,G):
     #pass
-    #self.r = G.r
-    #self.c = G.c
-    #self.rr = G.rr
-    #self.rc = G.rc
-
+    self.r = G.r
+    self.c = G.c
+    self.rr = G.rr
+    self.rc = G.rc
+    
+    
+    self.ratio_tmp        = np.zeros([self.r,self.c],int)
+    
+    
     #self.V_rest_tmp        = np.zeros([self.r,self.c],float)
     #self.state_tmp         = np.zeros([self.r,self.c],float)
     #self.h_total_pre_tmp   = np.zeros([self.r,self.c],float)
@@ -69,8 +73,19 @@ class TimeStep:
       #self.undo = self.__undoSur
 
 
-
-
+  def saveratio(self,surArr) :
+    for i in self.rr :
+      for j in self.rc[i] :
+        self.ratio_tmp[i][j]   = surArr[i][j].ratio
+  
+  
+  
+  def compareratio(self,surArr) :
+    for i in self.rr :
+      for j in self.rc[i] :
+        if self.ratio_tmp[i][j] != surArr[i][j].ratio : 
+          return False
+    return True
   #def __saveSur(self,surArr, subArr):
 
     #for i in self.rr:

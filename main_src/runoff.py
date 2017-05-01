@@ -127,7 +127,7 @@ else:
   hydrographs = wf.HydrographsPass()
 
 
-time_step = TimeStep()
+time_step = TimeStep(Globals)
 
 
 # first record hydrographs
@@ -153,14 +153,15 @@ while ( total_time < end_time ):
     iter_                = 0
     
     
-    
     while (iter_ < maxIter):
       iter_ += 1
       #time_step.undo(surface.arr,subsurface.arr)
       tz                 = tz_tmp
       sum_interception   = sum_interception_tmp
       courant.reset()
-      ratio_tmp = ratio
+      
+      time_step.saveratio(surface.arr)
+      #ratio_tmp = ratio
 
       
       v_sheet, v_rill, curr_rain, tz = time_step.do_flow( surface, subsurface, delta_t, Globals, mat_efect_vrst, courant, itera, total_time, tz, sr )
@@ -170,8 +171,7 @@ while ( total_time < end_time ):
       delta_t, surface = courant.courant(curr_rain,delta_t,spix,surface)
       
       
-
-      if (delta_t_tmp == delta_t) and (ratio_tmp == ratio) : break
+      if (delta_t_tmp == delta_t) and (time_step.compareratio(surface.arr)) : break
     
     
     
