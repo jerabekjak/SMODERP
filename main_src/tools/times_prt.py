@@ -18,7 +18,13 @@ if prtTimes :
 
       self.fTimes = open(prtTimes,'r')
       self.outsubrid = 'prubeh'
+      self.outsubrid1 = 'htotal'
+      self.outsubrid2 = 'hsheet'
+      self.outsubrid3 = 'hrill'
       os.makedirs(Globals.outdir+os.sep+self.outsubrid)
+      os.makedirs(Globals.outdir+os.sep+self.outsubrid+os.sep+self.outsubrid1)
+      os.makedirs(Globals.outdir+os.sep+self.outsubrid+os.sep+self.outsubrid2)
+      os.makedirs(Globals.outdir+os.sep+self.outsubrid+os.sep+self.outsubrid3)
       self.times  = []
       self.__n    = 0
 
@@ -44,8 +50,12 @@ if prtTimes :
       if (time < self.times[self.__n]) & (self.times[self.__n] <=time+dt) :
 
         cas = '%015.2f' % (time+dt)
-        filen = Globals.outdir + os.sep  + self.outsubrid +os.sep+ 'H' + str(cas).replace('.','_')+'.asc'
-        prt.message("Printing total H into file: ." +os.sep+ filen + '...')
+        filen = Globals.outdir + os.sep  + self.outsubrid + os.sep  + self.outsubrid1 + os.sep+ 'H' + str(cas).replace('.','_')+'.asc'
+        filen2 = Globals.outdir + os.sep  + self.outsubrid + os.sep  + self.outsubrid2 + os.sep+ 'h_sheet' + str(cas).replace('.','_')+'.asc'
+        filen3 = Globals.outdir + os.sep  + self.outsubrid + os.sep  + self.outsubrid3 + os.sep+ 'h_rill' + str(cas).replace('.','_')+'.asc'
+        prt.message("Printing total H into       file: ." +os.sep+ filen + '...')
+        prt.message("Printing total h_sheet into file: ." +os.sep+ filen2 + '...')
+        prt.message("Printing total h_rill  into file: ." +os.sep+ filen3 + '...')
         prt.message("-----------------------------------------------------------")
         prt.message("-----------------------------------------------------------")
         tmp =  np.zeros([Globals.r,Globals.c],float)
@@ -55,6 +65,19 @@ if prtTimes :
             tmp[i][j] = sur.arr[i][j].h_total_new
 
         make_ASC_raster(filen,tmp,Globals)
+        
+        for i in Globals.rr:
+          for j in Globals.rc[i]:
+            tmp[i][j] = sur.arr[i][j].h_sheet
+
+        make_ASC_raster(filen2,tmp,Globals)
+        
+        
+        for i in Globals.rr:
+          for j in Globals.rc[i]:
+            tmp[i][j] = sur.arr[i][j].h_rill
+
+        make_ASC_raster(filen3,tmp,Globals)
 
 
         # pro pripat, ze v dt by bylo vice pozadovanych tisku, v takovem pripade udela jen jeden

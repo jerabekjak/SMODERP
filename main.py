@@ -84,6 +84,6 @@ if __name__ == "__main__":
 
 
   #sys.argv.append(sys.path[0]+os.sep+'prt_times.in')
-  sys.argv.append('')
+  sys.argv.append('./indata/prt_times.in')
   import main_src.runoff
 
