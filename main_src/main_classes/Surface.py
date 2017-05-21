@@ -30,8 +30,8 @@ class SurArrs :
     self.state =       int(0)
     self.sur_ret =     sur_ret
     self.cur_sur_ret = float(0)
-    self.h =           float(0)
-    self.h_total =     float(0)
+    self.h_sheet     =    float(0)
+    self.h_total_new =    float(0)
     self.h_total_pre =    float(0)
     self.V_runoff =     float(0)
     self.V_runoff_pre = float(0)
@@ -99,7 +99,7 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
 
     arr = self.arr[i][j]
 
-    self.update_state(i,j)
+    #self.update_state(i,j)
     self.compute_h_hrill(i,j)
 
     #if i == 8 : print "%.7f" % arr.h
@@ -107,8 +107,8 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
     
     q_sheet = self.sheet_runoff(i,j,dt)
 
-    if self.arr[i][j].h > 0.0 :
-      v_sheet = q_sheet / arr.h
+    if self.arr[i][j].h_sheet > 0.0 :
+      v_sheet = q_sheet / arr.h_sheet
     else:
       v_sheet = 0.0
 
@@ -122,6 +122,10 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
     self.arr[i][j] = arr
 
     return q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant
+
+
+
+
 
 
   def __runoff_zero_compType(self,i,j,dt,efect_vrst,ratio) :
@@ -140,6 +144,10 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
     self.arr[i][j] = arr
 
     return q_sheet, v_sheet, q_rill, v_rill, ratio, 0.0
+
+
+
+
 
 
   def update_state(self,i,j):
@@ -208,21 +216,30 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
       #file.write(str(i) + ' ' + str(j) + ' ' + str(ht) + ' ' + str(ht_1) + ' ' + str(ht-ht_1) + ' ' + str(hcrit) + ' ' + str(test) + ' ' +str(state) + '\n')
 ####### test #########
 
+
+
+
+
+
+
+
   def compute_h_hrill(self,i,j):
 
     arr = self.arr[i][j]
 
     state = arr.state
+
+    
     #print state
     #if i==6 and j==3 : print state, 'h', self.h
     if state == 0 :
-      arr.h_rill = 0
-      arr.h_pre = arr.h
+      arr.h_rill  = 0
+      arr.h_sheet = arr.h_total_pre
     elif state == 1 :
 
 ####### test #########
-      arr.h_rill = arr.h - arr.h_crit
-      arr.h      = arr.h_crit
+      arr.h_rill  = arr.h_total_pre - arr.h_crit
+      arr.h_sheet = arr.h_crit
       arr.h_pre = arr.h_crit
       #arr.h_rill = max(arr.h - arr.h_crit,0.0)
       #arr.h      = min(arr.h,arr.h_crit)
@@ -246,10 +263,15 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
       arr.h_rill = arr.h_rillPre
 
       if (arr.h_rill < arr.h) :
-        arr.h      = arr.h - arr.h_rill
+        arr.h_sheet      = arr.h_total_pre - arr.h_rill
       else:
-        arr.h_rill = max(arr.h,0)
-        arr.h      = 0.0
+        arr.h_rill = max(arr.h_total_pre,0)
+        arr.h_sheet      = 0.0
+
+
+
+
+
 
     #if i==1 and j==1 :  print arr.h, arr.h_rill
   def sheet_runoff(self,i,j,dt):
@@ -259,62 +281,62 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
 
     q_sheet = self.shallowSurfaceKinematic(arr)
     arr.V_runoff = dt * q_sheet * self.dx
-    arr.V_rest = arr.h * self.pixel_area - arr.V_runoff
+    arr.V_rest = arr.h_sheet * self.pixel_area - arr.V_runoff
 
     #self.arr[i][j] = arr
 
     return q_sheet
 
+
+
+
+
+
   def rill_runoff(self,i,j,dt,efect_vrst,ratio):
 
-    arr = self.arr[i][j]
+    sur = self.arr[i][j]
 
-    #print arr.h_rill, arr.rillWidth,self.pixel_area,efect_vrst,constants.RILL_RATIO,mat_n[i][j],mat_slope[i][j],dt,ratio
-    #sys.exit()
-    
-    
-    #if i==2 and j == 1 : 
-      ##print
-      ##print 'i', "%.2d" % i
-      #ppp = True
-    #else :
+
     ppp = False
+
+    V_to_rill = sur.h_rill*Globals.pixel_area
+    h, b   = rill.update_hb(V_to_rill,constants.RILL_RATIO,efect_vrst,sur.rillWidth,ratio,ppp)
+    R_rill = (h*b)/(b + 2*h)
+    #print '\t', h,b, b, 2*h
+    v_rill = math.pow(R_rill,(2.0/3.0)) * 1./mat_n[i][j] * math.pow(mat_slope[i][j]/100,0.5)
+    #print "V_to_rill, R_rill", V_to_rill, R_rill
+    q_rill = v_rill * constants.RILL_RATIO * b * b # [m3/s]
+    V      = q_rill*dt
+    courant = (v_rill*dt)/efect_vrst
+    sur.V_to_rill = V_to_rill
+    sur.rillWidth = b
+    #print 'courant', v_rill,dt,efect_vrst 
+    if (courant <= 1.0) :
+
+      if V>(V_to_rill):
+        sur.V_rill_rest   = 0
+        sur.V_runoff_rill = V_to_rill
+
+      else:
+        #print 'sur.V_runoff_rill', sur.V_runoff_rill
+        sur.V_rill_rest   = V_to_rill - V
+        sur.V_runoff_rill = V
+
+    else:
+      return q_rill, v_rill, ratio, courant
     
-    #ppp = False
-    #print i,j
-    #if i==1 and j==1 : print 'hrill ', arr.h_rill
-    if arr.state == 1 :
-      arr.rillWidth = 0
-    arr.rillWidth, \
-    V_to_rill, \
-    arr.V_runoff_rill, \
-    arr.V_rill_rest, \
-    q_rill, \
-    v_rill, \
-    ratio, \
-    rill_courant = self.rillCalculations(arr,
-                                         self.pixel_area,
-                                         efect_vrst,
-                                         constants.RILL_RATIO,
-                                         mat_n[i][j],
-                                         mat_slope[i][j],
-                                         dt,
-                                         ratio,ppp)
+    return q_rill, v_rill, ratio, courant
 
 
-    #if i==8 : print  arr.h_rill * self.pixel_area, 
-    #if i==8 : print "%.10f" %  arr.rillWidth, 
-    #if ppp : print 'asdadsfadfadfad' "%.10f" %  arr.V_rill_rest,
-    #if i==8 : print "%.10f" %  arr.V_runoff_rill
-    #arr.h_rill = arr.V_rill_rest/self.pixel_area
-    arr.V_to_rill = V_to_rill
-
-    return q_rill, v_rill, ratio, rill_courant
 
 
 
   def bilance(self):
     pass
+
+
+
+
 
 
 
@@ -340,12 +362,15 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
 
 
 
+
+
+
   def return_str_vals(self,i,j,sep,dt):
 
     arr = self.arr[i][j]
 
     #Water_level_[m];Flow_[m3/s];V_runoff[m3];V_rest[m3];Infiltration[];surface_retention[l]
-    line = str(arr.h) + sep + str(arr.V_runoff/dt) + sep + str(arr.V_runoff) + sep + str(arr.V_rest) + sep + str(arr.infiltration)+ sep + str(arr.cur_sur_ret)+ sep + str(arr.state) + sep + str(arr.inflow_tm)
+    line = str(arr.h_sheet) + sep + str(arr.V_runoff/dt) + sep + str(arr.V_runoff) + sep + str(arr.V_rest) + sep + str(arr.infiltration)+ sep + str(arr.cur_sur_ret)+ sep + str(arr.state) + sep + str(arr.inflow_tm)
 
     if self.rill_computing :
       #';Rill_size;Rill_flow;Rill_V_runoff;Rill_V_rest'
@@ -354,6 +379,10 @@ class Surface(Stream if stream == True else StreamPass,Kinematic,Globals,Size):
     bil_  = arr.inflow_tm - (arr.V_runoff + arr.V_runoff_rill + arr.infiltration*self.pixel_area) - (arr.cur_sur_ret*self.pixel_area + arr.V_rest + arr.V_rill_rest) + (arr.V_rest_pre + arr.V_rill_rest_pre)
     #bil_  = arr.inflow_tm - (arr.V_runoff + arr.infiltration*self.pixel_area) - (arr.cur_sur_ret*self.pixel_area + arr.V_rest) + (arr.V_rest_pre)
     return line, bil_
+
+
+
+
 
 
 

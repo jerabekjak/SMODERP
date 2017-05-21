@@ -251,19 +251,17 @@ class Cumulative(CumulativeSubsurface if subflow == True else CumulativeSubsurfa
     q_sheet = surface.V_runoff/delta_t
     q_rill  = surface.V_runoff_rill/delta_t
 
-    if surface.state == 0:
-      if surface.h > self.h_sur[i][j]:
-        self.h_sur[i][j] = surface.h
-        self.q_sur[i][j] = q_sheet
 
-    elif (surface.state == 1) or (surface.state == 2):
+    if surface.h_sheet > self.h_sur[i][j]:
+      self.h_sur[i][j] = surface.h_sheet
+      self.q_sur[i][j] = q_sheet
+
+    if (surface.state == 1) or (surface.state == 2):
 
       self.V_rill[i][j] += surface.V_runoff_rill
-      if surface.h > self.h_sur[i][j] :
-        self.h_sur[i][j] = surface.h
-        self.q_sur[i][j] = q_sheet
 
-      elif surface.h_rill > self.h_rill[i][j]:
+
+      if surface.h_rill > self.h_rill[i][j]:
         self.h_rill[i][j]  = surface.h_rill
         self.b_rill[i][j]  = surface.b
         self.q_rill[i][j]  = q_rill

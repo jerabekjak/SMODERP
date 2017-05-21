@@ -18,23 +18,19 @@ class Courant():
 
   ## constructor
   #
-  def __init__(self):
+  def __init__(self,r,c):
     #self.orig_dt = dt
-    self.maxh   = 0
-    self.cour_speed  = 0
     ## citical courant value
     self.cour_crit  = 1.0
-    self.cour_most        = self.cour_crit+1.0
-    self.cour_most_rill   = self.cour_crit+1.0
+    self.cour_most  = np.zeros([r,c],float)
+    self.cour_most.fill(self.cour_crit)
+    self.cour_speed  = np.zeros([r,c],float)
+    self.cour_speed.fill(0.0)
+    
     self.cour_coef  = 0.5601
     self.cour_least  = self.cour_crit*0.75
-    self.i = -1
-    self.j = -1
-    self.co = 'sheet'
-    self.co_pre = 'sheet'
-    self.maxratio = 10
     self.max_delta_t = float(get_argv(constants.PARAMETER_MAX_DELTA_T))
-    self.max_delta_t_mult = 1.0
+    #self.max_delta_t_mult = 1.0
 
 
 
@@ -49,9 +45,8 @@ class Courant():
   ## Resets the self.cour_most and self.cour_speed after each time stop computation is successfully completed
   #
   def reset(self):
-    self.cour_most   = 0
-    self.cour_speed  = 0
-    self.cour_most_rill   = 0
+    self.cour_most.fill(0.0)
+
 
 
   ## Guesses the initial time step.
@@ -59,60 +54,31 @@ class Courant():
   #  the guess is based on the maximum \e a and \e b parameters of the kinematic wave equation and critical water level
   #  in case of sheet flow only calculation the water level guess is 0.001 \e m by default
   def initial_time_step(self,sur):
-    sumA = sumB = sumHCrit = 0
-    count = 0
-    only_surface = comp_type('surface')
-
-
-
-
-    for i in sur.rr:
-      for j in sur.rc[i]:
-        sumA += sur.arr[i][j].a
-        sumB += sur.arr[i][j].b
-        sumHCrit += sur.arr[i][j].h_crit
-        count += 1
-
-    meanA = sumA/float(count)
-    meanB = sumB/float(count)
-    if (only_surface) :
-      meanHCrit = 0.001
-    else:
-      meanHCrit = sumHCrit/float(count)
-
-
-
-    velGuess = meanA*meanHCrit*meanB*meanB
-    self.initGuess = (math.sqrt(sur.pixel_area)*self.cour_least*self.cour_coef)/velGuess
-
-    #return self.initGuess
-    return self.max_delta_t
+    wrk = np.zeros([sur.r,sur.c],float)
+    wrk.fill(max_delta_t)
+    return wrk
 
 
 
   ## Checks and store in each computational cell the maximum velocity and maximum Courant coefficient
   #
-  def CFL(self,i,j,h0, v, delta_t, efect_vrst, co, rill_courant):
+  def CFL(self,i,j,h0, v, delta_t, efect_vrst):
+    
     cour = v / self.cour_coef * delta_t / efect_vrst
 
 
 
-    if cour > self.cour_most:
-        self.i = i
-        self.j = j
-        self.co = co
-        self.cour_most  = cour
-        self.maxh       = h0
-        self.cour_speed = v
-    if rill_courant > self.cour_most_rill:
-        self.cour_most_rill = rill_courant
+    if cour > self.cour_most[i][j]:
+        self.cour_speed[i][j] = v
+        self.cour_most[i][j]  = cour
+
 
 
   ## Returns the adjusted/unchanged time step after a time step computation is completed.
   #
   #  Also returns the ratio for the rill computation division.
   #
-  def courant(self,rainfall,delta_t,efect_vrst,ratio):
+  def courant(self,rainfall,delta_t,efect_vrst,i,j):
 
 
     # ratio se muze zmensit  a max_delta_t_mult zvetsit
@@ -122,12 +88,12 @@ class Courant():
     # to je ale reseno lokalne
     # v  ./main_src/processes/rill.py
     #
-    if (self.cour_most_rill < 0.1) :
-      ratio = max(1,ratio-1) # ratio nemuze byt mensi nez 1
-      if ratio == 1 :
-        self.max_delta_t_mult = 1.0
-      else :
-        self.max_delta_t_mult = min(1.0, self.max_delta_t_mult*1/(0.9)) # max_delta_t_mult nemuze byt vetsi nez 1.0
+    #if (self.cour_most_rill < 0.1) :
+      #ratio = max(1,ratio-1) # ratio nemuze byt mensi nez 1
+      #if ratio == 1 :
+        #self.max_delta_t_mult = 1.0
+      #else :
+        #self.max_delta_t_mult = min(1.0, self.max_delta_t_mult*1/(0.9)) # max_delta_t_mult nemuze byt vetsi nez 1.0
 
 
 
@@ -136,17 +102,17 @@ class Courant():
     # proto se zmensuje max_delta_t_mult
     # ktery nasobi vysledne delta
     #
-    if ((ratio > self.maxratio) or (self.cour_most_rill > 1.0)) :
-      ratio = self.maxratio
-      #ratio = 1
-      self.max_delta_t_mult *= 0.9
+    #if ((ratio > self.maxratio) or (self.cour_most_rill > 1.0)) :
+      #ratio = self.maxratio
+      ##ratio = 1
+      #self.max_delta_t_mult *= 0.9
 
 
     # pokud je maximalni courant mimo dovolena kryteria
     # mensi nez cour_least a vetsi nez cour_crit
     # explicitne se dopocita dt na nejvetsi mozne
     #                                      xor
-    if ((self.cour_most < self.cour_least) !=  (self.cour_crit <= self.cour_most)):
+    if ((self.cour_most[i][j] < self.cour_least) !=  (self.cour_crit <= self.cour_most[i][j])):
 
       # pokud se na povrchu nic nedeje
       # nema se zmena dt cim ridit
@@ -154,7 +120,7 @@ class Courant():
       # max_delta_t_mult se meni podle ryh, vyse v teto funkci
       #
       if (self.cour_speed==0.0):
-        return self.max_delta_t*self.max_delta_t_mult, ratio
+        return self.max_delta_t
 
       dt = round((efect_vrst*self.cour_crit*self.cour_coef)/self.cour_speed,4)
 
@@ -165,19 +131,15 @@ class Courant():
       #return dt*self.max_delta_t_mult, ratio
       #return min(dt,self.max_delta_t*self.max_delta_t_mult), ratio
       #print 'asdf', self.cour_speed, dt, self.max_delta_t_mult
-      return min(dt*self.max_delta_t_mult,self.max_delta_t*self.max_delta_t_mult), ratio
+      return min(dt,self.max_delta_t)
 
     # pokud je courant v povolenem rozmezi
     # skontrolje se pouze pokud neni vetsi nez maxdt * max_delta_t_mult
     # max_delta_t_mult se meni podle ryh, vyse v teto funkci
     else:
       #print 'fdafdsfasdfadsfadsfadsfaf'
-      #return delta_t, ratio
-      #print 'asdf', dt, dt*self.max_delta_t_mult, ratio
-      if ((ratio <= self.maxratio) and (self.cour_most_rill < 0.5)) :
-        return delta_t, ratio
-      else:
-        return delta_t*self.max_delta_t_mult, ratio
+
+        return delta_t
 
 
     prt.error('courant.cour() missed all its time step conditions\n no rule to preserve or change the time step!')

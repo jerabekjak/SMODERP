@@ -141,7 +141,7 @@ class TimeStep:
 
 
 
-  def do(self,surface, subsurface, rain_arr, courant, G, itera, total_time, delta_t, delta_t_pre, tz, sr, combinatIndex, NoDataValue, sum_interception, mat_efect_vrst,ratio, hydrographs):
+  def do(self,surface, subsurface, rain_arr, courant, G, itera, total_time, delta_t, tz, sr, combinatIndex, NoDataValue, sum_interception, mat_efect_vrst,ratio, hydrographs):
 
     global infilt_capa
     global max_infilt_capa
@@ -155,24 +155,6 @@ class TimeStep:
     #
     # rainfall during time step
     #
-    rainfall, tz = rain_f.timestepRainfall(itera,total_time,delta_t_pre,tz,sr)
-    infilt_capa += rainfall
-    if (infilt_capa < max_infilt_capa) :
-      infilt_time += delta_t_pre
-      NS = 0.0
-      rainfall = 0.0
-      return NS, surface, subsurface,  tz, sum_interception, ratio, rainfall, 0.0, 0.0, 0.0
-
-
-    for iii in combinatIndex:
-        index = iii[0]
-        k = iii[1]
-        s =  iii[2]
-        #jj * 100.0 !!! smazat
-        iii[3] = infilt.phlilip(k, s, delta_t_pre, total_time-infilt_time, NoDataValue)
-        #print total_time-infilt_time, iii[3]*1000, k, s
-
-    infilt.set_combinatIndex(combinatIndex)
 
 
 
@@ -193,50 +175,35 @@ class TimeStep:
         
         #h = h_pre + p_pre - inf_pre + inflows_pre
         
+        rainfall, tz = rain_f.timestepRainfall(itera,total_time,delta_t[i][j],tz[i][j],sr)
+        #infilt_capa += rainfall
+        #if (infilt_capa < max_infilt_capa) :
+          #infilt_time += delta_t
+          #NS = 0.0
+          #rainfall = 0.0
+          #return NS, surface, subsurface,  tz, sum_interception, ratio, rainfall, 0.0, 0.0, 0.0
+
+
+        for iii in combinatIndex:
+            index = iii[0]
+            k = iii[1]
+            s =  iii[2]
+            #jj * 100.0 !!! smazat
+            iii[3] = infilt.phlilip(k, s, delta_t[i][j], total_time-infilt_time, NoDataValue)
+            #print total_time-infilt_time, iii[3]*1000, k, s
+
+        infilt.set_combinatIndex(combinatIndex)
         
         #
         # current cell precipitation
         #
-        #print rain_arr.arr[i][j], rainfall, sum_interception
-        NS, sum_interception, rain_arr.arr[i][j].veg_true = rain_f.current_rain(rain_arr.arr[i][j], rainfall, sum_interception)
-        #
-        # Inflows from surroundings cells
-        #
-        surface.arr[i][j].inflow_tm = surface.cell_runoff(i,j)
-        #
-        # Surface BILANCE
-        #
-        surBIL =  surface.arr[i][j].V_rest_pre/pixel_area + surface.arr[i][j].V_rill_rest_pre/pixel_area + NS + surface.arr[i][j].inflow_tm/pixel_area
-
-
-        #
-        # infiltration
-        #
-        if subsurface.get_exfiltration(i,j) > 0 :
-          surface.arr[i][j].infiltration = 0.0
-          infiltration =  0.0
-          #print 'NS', NS
-        else :
-          surBIL, infiltration = infilt.philip_infiltration(surface.arr[i][j].soil_type,surBIL)
-          surface.arr[i][j].infiltration = infiltration
-
-        # surface retention
-        surBIL = surface.surface_retention(i,j,surBIL)  + subsurface.get_exfiltration(i,j)
-        #print surBIL
-        h0 = surBIL
-
-        
-        
-        
-        surface.arr[i][j].h = h0
-        surface.arr[i][j].h_total = h0
         surface_state   = surface.arr[i][j].state
 
         # subsurface inflow
         #
-        inflow_sub = subsurface.cell_runoff(i,j,False)
-        subsurface.bilance(i,j,infiltration,inflow_sub/pixel_area,delta_t)
-        subsurface.fill_slope()
+        #inflow_sub = subsurface.cell_runoff(i,j,False)
+        #subsurface.bilance(i,j,infiltration,inflow_sub/pixel_area,delta_t)
+        #subsurface.fill_slope()
         
         
         
@@ -263,23 +230,54 @@ class TimeStep:
 
         else:
 
-          q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant = surface.runoff(i,j,delta_t, mat_efect_vrst[i][j], ratio)
-          subsurface.runoff(i,j,delta_t, mat_efect_vrst[i][j])
+          q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant = surface.runoff(i,j,delta_t[i][j], mat_efect_vrst[i][j], ratio)
+          subsurface.runoff(i,j,delta_t[i][j], mat_efect_vrst[i][j])
 
         q_surface = q_sheet+q_rill
 
-        v = v_sheet
+        v = v_sheet + v_rill
         co='sheet'
         
         
         
+        #print rain_arr.arr[i][j], rainfall, sum_interception
+        NS, sum_interception, rain_arr.arr[i][j].veg_true = rain_f.current_rain(rain_arr.arr[i][j], rainfall, sum_interception)
 
+        surface.arr[i][j].inflow_tm = surface.cell_runoff(i,j)
+        
+        #
+        # Surface BILANCE
+        #
+        surBIL = surface.arr[i][j].h_total_pre + NS + surface.arr[i][j].inflow_tm/pixel_area - (surface.arr[i][j].V_runoff/pixel_area + surface.arr[i][j].V_runoff_rill/pixel_area)
+        #
+        # infiltration
+        #
+        if subsurface.get_exfiltration(i,j) > 0 :
+          surface.arr[i][j].infiltration = 0.0
+          infiltration =  0.0
+          #print 'NS', NS
+        else :
+          surBIL, infiltration = infilt.philip_infiltration(surface.arr[i][j].soil_type,surBIL)
+          surface.arr[i][j].infiltration = infiltration
+
+
+
+        surBIL += subsurface.get_exfiltration(i,j)
+        
+        
+        surface.arr[i][j].h_total_new = surBIL
+        
+        #print surface.arr[i][j].h_sheet, surface.arr[i][j].h_total_pre, infiltration, NS,  surface.arr[i][j].inflow_tm/pixel_area
+        surface_state = surface.arr[i][j].state
+        
+        
+        
         #if ratio > ratio_tmpp :
           ##print '\t, ', ratio_tmpp, ratio #; raw_input()
           #courant.CFL(i,j,surface.arr[i][j].h,v,delta_t,mat_efect_vrst[i][j],co, rill_courant)
           #return NS, surface, subsurface,  tz, sum_interception, ratio, rainfall, v_sheet, v_rill
        
-        courant.CFL(i,j,surface.arr[i][j].h,v,delta_t,mat_efect_vrst[i][j],co, rill_courant)
+        courant.CFL(i,j,surface.arr[i][j].h_sheet,v,delta_t[i][j],mat_efect_vrst[i][j])
        
 
 

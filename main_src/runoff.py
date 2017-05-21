@@ -51,24 +51,23 @@ from   main_src.tools.times_prt       import TimesPrt
 
 
 
+#
+#
+#
+#
+#  init sequence
+#
+#
+#
+#
 isRill, subflow, stream, diffuse = comp_type()
 
-
-
-
-
-
 times_prt = TimesPrt()
-
-
-
-
-
 start = time.time()
 
 infiltrationType = int(0)
 total_time = 0.0 #delta_t bacha delta_t se prepisuje nize u couranta
-tz = 0
+tz = np.zeros([rows,cols],int)
 sum_interception = 0
 ratio = 1
 maxIter = 40
@@ -105,10 +104,10 @@ prt.message("--------------------- ------------------- ---------------------")
 courant = courant.Courant()
 delta_t = courant.initial_time_step(surface)
 courant.set_time_step(delta_t)
-delta_t_pre = delta_t
 
 
-prt.message('Corrected time step is', delta_t, '[s]')
+
+#prt.message('Corrected time step is', delta_t, '[s]')
 
 
 
@@ -125,17 +124,31 @@ if points_shape and points_shape != "#":
 else:
   hydrographs = wf.HydrographsPass()
 
+for i in rrows:
+  for j in rcols[i]:
+    hydrographs.write_hydrographs_record(i,j,ratio,0.0,0.0,0,delta_t[i][j],total_time,surface,subsurface,0.0,)
+
+
+#hydrographs.write_hydrographs_record(i,j,ratio,0.0,0.0,0,delta_t,total_time,surface,subsurface,0.0,True)
+
 
 time_step = TimeStep(Globals)
 
 
 
-for i in rrows:
-  for j in rcols[i]:
-    hydrographs.write_hydrographs_record(i,j,ratio,0.0,0.0,0,delta_t,total_time,surface,subsurface,0.0,)
+#
+#
+#
+#
+# end init sequence
+#
+#
+#
+#
 
 
-hydrographs.write_hydrographs_record(i,j,ratio,0.0,0.0,0,delta_t,total_time,surface,subsurface,0.0,True)
+
+
 
 
 
@@ -158,7 +171,7 @@ while ( total_time < end_time ):
 
       ratio_tmp = ratio
       
-      NS, surface, subsurface, tz, sum_interception, ratio, curr_rain, v_sheet, v_rill = time_step.do(surface, subsurface, rain_arr, courant, Globals, itera, total_time, delta_t, delta_t_pre, tz, sr, combinatIndex, NoDataValue, sum_interception, mat_efect_vrst,ratio, hydrographs)
+      NS, surface, subsurface, tz, sum_interception, ratio, curr_rain, v_sheet, v_rill = time_step.do(surface, subsurface, rain_arr, courant, Globals, itera, total_time, delta_t, tz, sr, combinatIndex, NoDataValue, sum_interception, mat_efect_vrst,ratio, hydrographs)
 
       delta_t_tmp = delta_t
       #print 'asdf', ratio, courant.cour_most_rill
@@ -178,6 +191,12 @@ while ( total_time < end_time ):
       #print total_time, delta_t_tmp, delta_t, ratio_tmp, ratio
 
       if (delta_t_tmp == delta_t) and (ratio_tmp == ratio) and not(surface.statechange): break
+    
+    #
+    #
+    #  end while
+    #
+    #
 
     timeperc = 100 * (total_time+delta_t) / end_time
     #raw_input()
@@ -207,15 +226,26 @@ while ( total_time < end_time ):
     surface.stream_cumulative(total_time+delta_t)
     
     
-    delta_t_pre = delta_t
     for i in rrows:
       for j in rcols[i]:
-        surface.arr[i][j].h_total_pre  = surface.arr[i][j].h_total
-        #surface.arr[i][j].h_total_pre = surface.arr[i][j].V_rest/pixel_area + surface.arr[i][j].V_rill_rest/pixel_area
-        surface.arr[i][j].V_runoff_pre = surface.arr[i][j].V_runoff
-        surface.arr[i][j].V_runoff_rill_pre = surface.arr[i][j].V_runoff_rill
-        surface.arr[i][j].V_rest_pre = surface.arr[i][j].V_rest
-        surface.arr[i][j].V_rill_rest_pre = surface.arr[i][j].V_rill_rest
+        
+        if surface.arr[i][j].state == 0 :
+          if surface.arr[i][j].h_total_new > surface.arr[i][j].h_crit :
+            surface.arr[i][j].state = 1
+            
+        #if surface.arr[i][j].state == 1 : 
+          #if surface.arr[i][j].h_total_new < surface.arr[i][j].h_total_pre : 
+            #surface.arr[i][j].h_last_state1  = surface.arr[i][j].h_total_pre
+            #surface.arr[i][j].state = 2
+            
+        #if surface.arr[i][j].state == 2 :
+          #if surface.arr[i][j].h_total_new > surface.arr[i][j].h_last_state1 : 
+            #surface.arr[i][j].state = 1
+            
+        surface.arr[i][j].h_total_pre = surface.arr[i][j].h_total_new
+        
+        
+        
 
     subsurface.curr_to_pre()
 
