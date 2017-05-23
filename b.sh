@@ -24,10 +24,10 @@ python main.py \
 - \
 - \
 indata/srazka.txt \
+20 \
 30 \
-15 \
 00.0  \
-- \
+00.0 \
 out \
 shallowandrillsurface \
 false \
@@ -38,6 +38,6 @@ false \
 - \
 False \
 true  \
-indata/dp_vse.save \
+indata/dp_hodne_bodu_tok.save \
 roff \
 true
