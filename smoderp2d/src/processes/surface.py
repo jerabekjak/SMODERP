@@ -1,10 +1,12 @@
 import math
+from smoderp2d.src.main_classes.General import Globals as Gl
 
 
-def shallowSurfaceKinematic(sur):
+def shallowSurfaceKinematic(i,j,sur):
 
-    a = sur.a
-    b = sur.b
-    h = sur.h_sheet
+    a = Gl.mat_aa[i][j]
+    b = Gl.mat_b[i][j]
+    #print sur.h_total_pre, sur.h_crit
+    h = min(sur.h_total_pre,sur.h_crit) 
 
     return math.pow(h, b) * a

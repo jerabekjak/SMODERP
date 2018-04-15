@@ -157,12 +157,12 @@ class TimeStep:
                 #
                 # Inflows from surroundings cells
                 #
-                surface.arr[i][j].inflow_tm = surface.cell_runoff(i, j)
+                surface.inflow_curr = surface.cell_runoff(i, j)
 
                 #
                 # Surface BILANCE
                 #
-                surBIL = surface.arr[i][j].h_total_pre + actRain + surface.arr[i][j].inflow_tm / pixel_area - (
+                surBIL = surface.arr[i][j].h_total_pre + actRain + surface.inflow_curr / pixel_area - (
                     surface.arr[i][j].V_runoff / pixel_area + surface.arr[i][j].V_runoff_rill / pixel_area)
 
                 #
@@ -222,7 +222,7 @@ class TimeStep:
                 cumulative.update_cumulative(
                     i,
                     j,
-                    surface.arr[i][j],
+                    surface,
                     subsurface,
                     delta_t)
                 hydrographs.write_hydrographs_record(

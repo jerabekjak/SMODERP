@@ -36,7 +36,7 @@ class SurArrs:
     #
     #  assign values into surface parameters
 
-    def __init__(self, sur_ret, inf_index, hcrit, a, b):
+    def __init__(self, sur_ret, inf_index, hcrit):
 
         self.state = int(0)
         self.sur_ret = sur_ret
@@ -46,21 +46,17 @@ class SurArrs:
         self.h_total_new = float(0)
         self.h_total_pre = float(0)
         self.V_runoff = float(0)
-        # self.V_runoff_pre = float(0)
         self.V_rest = float(0)
-        # self.V_rest_pre =   float(0)
-        self.inflow_tm = float(0)
+        #self.inflow_tm = float(0)
         self.soil_type = inf_index
         self.infiltration = float(0)
         self.h_crit = hcrit
-        self.a = a
-        self.b = b
+        #self.a = a
+        #self.b = b
         self.h_rill = float(0)
         self.h_rillPre = float(0)
         self.V_runoff_rill = float(0)
-        # self.V_runoff_rill_pre= float(0)
         self.V_rill_rest = float(0)
-        # self.V_rill_rest_pre =  float(0)
         self.rillWidth = float(0)
         self.V_to_rill = float(0)
         self.h_last_state1 = float(0)
@@ -94,9 +90,7 @@ class Surface(Stream if Gl.isStream else StreamPass, Kinematic, Globals, Size):
                 self.arr[i][j] = SurArrs(
                     self.mat_reten[i][j],
                     self.mat_inf_index[i][j],
-                    self.mat_hcrit[i][j],
-                    self.mat_aa[i][j],
-                    self.mat_b[i][j])
+                    self.mat_hcrit[i][j])
                 # print mat_aa[i][j],mat_b[i][j]
                 # self.arr[i][j] =
                 # SurArrs(-0.001,mat_inf_index[i][j],0.0025,0.965,1.7)
@@ -106,7 +100,10 @@ class Surface(Stream if Gl.isStream else StreamPass, Kinematic, Globals, Size):
         else:
             # raw_input()
             prt.message("\tRill flow: \n\t\tOFF")
-
+        
+        # inflow_tmp stores all inflows in each 
+        # time step for cumulativ record
+        self.inflow_curr = float(0)
         super(Surface, self).__init__()
 
     def return_str_vals(self, i, j, sep, dt, extraOut):
@@ -163,7 +160,7 @@ def __runoff(i, j, sur, dt, efect_vrst, ratio):
     sur.h_sheet, sur.h_rill, sur.h_rillPre = compute_h_hrill(
         h_total_pre, h_crit, state, sur.rillWidth, sur.h_rillPre)
 
-    q_sheet = sheet_runoff(sur, dt)
+    q_sheet = sheet_runoff(i,j,sur,dt)
 
     if sur.h_sheet > 0.0:
         v_sheet = q_sheet / sur.h_sheet
@@ -189,7 +186,7 @@ def __runoff_zero_compType(i, j, sur, dt, efect_vrst, ratio):
     # sur.state               = update_state1(h_total_pre,h_crit,state)
     sur.h_sheet = sur.h_total_pre
 
-    q_sheet = sheet_runoff(sur, dt)
+    q_sheet = sheet_runoff(i,j,sur,dt)
 
     if sur.h_sheet > 0.0:
         v_sheet = q_sheet / sur.h_sheet
@@ -235,10 +232,10 @@ def compute_h_hrill(h_total_pre, h_crit, state, rillWidth, hRillPre):
         return h_sheet, h_rill, hRillPre
 
 
-def sheet_runoff(sur, dt):
+def sheet_runoff(i,j,sur, dt):
 
     gl = Gl()
-    q_sheet = surfacefce.shallowSurfaceKinematic(sur)
+    q_sheet = surfacefce.shallowSurfaceKinematic(i,j,sur)
     sur.V_runoff = dt * q_sheet * gl.get_dx()
     sur.V_rest = sur.h_sheet * gl.get_pixel_area() - sur.V_runoff
 

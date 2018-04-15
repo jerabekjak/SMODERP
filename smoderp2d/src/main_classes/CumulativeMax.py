@@ -217,35 +217,36 @@ class Cumulative(CumulativeSubsurface if Gl.subflow else CumulativeSubsurfacePas
     #
     def update_cumulative(self, i, j, surface, subsurface, delta_t):
 
-        self.infiltration[i][j] += surface.infiltration * self.pixel_area
-        self.precipitation[i][j] += surface.cur_rain * self.pixel_area
-        self.V_sur[i][j] += surface.V_runoff
-        self.V_sur_r[i][j] += surface.V_rest
-        self.V_sur_tot[i][j] += surface.V_rest + surface.V_runoff
-        self.inflow_sur[i][j] += surface.inflow_tm
-        self.sur_ret[i][j] += surface.cur_sur_ret * self.pixel_area
+        sur_arr = surface.arr[i][j]
+        self.infiltration[i][j] += sur_arr.infiltration * self.pixel_area
+        self.precipitation[i][j] += sur_arr.cur_rain * self.pixel_area
+        self.V_sur[i][j] += sur_arr.V_runoff
+        self.V_sur_r[i][j] += sur_arr.V_rest
+        self.V_sur_tot[i][j] += sur_arr.V_rest + sur_arr.V_runoff
+        self.inflow_sur[i][j] += surface.inflow_curr
+        self.sur_ret[i][j] += sur_arr.cur_sur_ret * self.pixel_area
 
-        q_sheet = surface.V_runoff / delta_t
-        q_rill = surface.V_runoff_rill / delta_t
+        q_sheet = sur_arr.V_runoff / delta_t
+        q_rill = sur_arr.V_runoff_rill / delta_t
         q_tot = q_sheet + q_rill
         if q_tot > self.q_sur_tot[i][j]:
             self.q_sur_tot[i][j] = q_tot
 
-        if surface.state == 0:
-            if surface.h_total_new > self.h_sur[i][j]:
-                self.h_sur[i][j] = surface.h_total_new
+        if sur_arr.state == 0:
+            if sur_arr.h_total_new > self.h_sur[i][j]:
+                self.h_sur[i][j] = sur_arr.h_total_new
                 self.q_sur[i][j] = q_sheet
 
-        elif (surface.state == 1) or (surface.state == 2):
-            self.V_rill[i][j] += surface.V_runoff_rill
-            self.V_rill_r[i][j] += surface.V_rill_rest
-            if surface.h_total_new > self.h_sur[i][j]:
-                self.h_sur[i][j] = surface.h_total_new
+        elif (sur_arr.state == 1) or (sur_arr.state == 2):
+            self.V_rill[i][j] += sur_arr.V_runoff_rill
+            self.V_rill_r[i][j] += sur_arr.V_rill_rest
+            if sur_arr.h_total_new > self.h_sur[i][j]:
+                self.h_sur[i][j] = sur_arr.h_total_new
                 self.q_sur[i][j] = q_sheet
 
-            elif surface.h_rill > self.h_rill[i][j]:
-                self.h_rill[i][j] = surface.h_rill
-                self.b_rill[i][j] = surface.rillWidth
+            elif sur_arr.h_rill > self.h_rill[i][j]:
+                self.h_rill[i][j] = sur_arr.h_rill
+                self.b_rill[i][j] = sur_arr.rillWidth
                 self.q_rill[i][j] = q_rill
 
         self.update_cumulative_sur(

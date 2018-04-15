@@ -192,6 +192,7 @@ def init_classes():
 
     # instance of class which opens files for storing hydrographs
     import io_functions.hydrographs as wf
+    """
     points_shape = Gl.points
     if points_shape and points_shape != "#":
         hydrographs = wf.Hydrographs()
@@ -203,8 +204,8 @@ def init_classes():
                         Gl.array_points[i][3]) + ' ' + str(Gl.array_points[i][4]) + '\n')
             f.closed
     else:
-        hydrographs = wf.HydrographsPass()
-
+    """
+    hydrographs = wf.HydrographsPass()
     # instance of class contains method for single time step calculation
     time_step = TimeStep()
 

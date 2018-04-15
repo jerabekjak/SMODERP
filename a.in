@@ -37,7 +37,7 @@ file: indata/srazka.txt
 #sec
 maxdt: 20
 #min
-endtime: 20
+endtime: 5
 
 
 [Other]
@@ -51,7 +51,7 @@ outdir: out-test
 # zadava se 
 # pro zousteni z arvgis je zkryt
 # zatim mozna neni zajimavy...
-typecomp: 3
+typecomp: 0
 # 
 # Mfda zatim zustava false
 mfda: False
