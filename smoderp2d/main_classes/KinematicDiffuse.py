@@ -1,11 +1,11 @@
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
-from smoderp2d.src.main_classes.Flow import *
+from smoderp2d.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.Flow import *
 
 
-import smoderp2d.src.io_functions.prt as prt
-import smoderp2d.src.flow_algorithm.flow_direction as flow_direction
+import smoderp2d.io_functions.prt as prt
+import smoderp2d.flow_algorithm.flow_direction as flow_direction
 
 class Kinematic(Mfda if Gl.mfda else D8):
 

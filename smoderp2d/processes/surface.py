@@ -1,5 +1,5 @@
 import math
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 
 def shallowSurfaceKinematic(i,j,sur):

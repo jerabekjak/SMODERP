@@ -1,9 +1,9 @@
-# @package smoderp2d.src.post_proc Contain a function for the post-processing
+# @package smoderp2d.post_proc Contain a function for the post-processing
 #
-#  the functions are defined according to the  smoderp2d.src.constants.PARAMETER_ARCGIS \n
-#  if smoderp2d.src.constants.PARAMETER_ARCGIS == True: Gl.arcgis rasters are created \n
+#  the functions are defined according to the  smoderp2d.constants.PARAMETER_ARCGIS \n
+#  if smoderp2d.constants.PARAMETER_ARCGIS == True: Gl.arcgis rasters are created \n
 #  \n
-#  if smoderp2d.src.constants.PARAMETER_ARCGIS == False: ascii rasters are created \n
+#  if smoderp2d.constants.PARAMETER_ARCGIS == False: ascii rasters are created \n
 #
 
 
@@ -13,14 +13,14 @@ import sys
 import shutil
 
 
-import smoderp2d.src.tools.tools as tools
-import smoderp2d.src.constants as constants
-from smoderp2d.src.tools.tools import get_argv
-from smoderp2d.src.tools.tools import comp_type
-import smoderp2d.src.io_functions.prt as prt
-from smoderp2d.src.tools.tools import logical_argv
+import smoderp2d.tools.tools as tools
+import smoderp2d.constants as constants
+from smoderp2d.tools.tools import get_argv
+from smoderp2d.tools.tools import comp_type
+import smoderp2d.io_functions.prt as prt
+from smoderp2d.tools.tools import logical_argv
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 
 def raster_output_arcgis(arrin, G, fs, outname, reachNA=True):

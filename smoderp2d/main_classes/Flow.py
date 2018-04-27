@@ -1,10 +1,10 @@
-# @package smoderp2d.src.main_classes.Flow
+# @package smoderp2d.main_classes.Flow
 #
 #  Contains Classes and methods resolve
 #  the flow type according the D8 or Mfda algorithm.
 #
 #  Flow algorithms itself  are stores in the package
-#  smoderp2d.src.flow_algorithm.
+#  smoderp2d.flow_algorithm.
 #
 #  Classes defined here assemble the
 #  the algorithms and defines methods to
@@ -13,25 +13,25 @@
 #
 #  Both classes can inherited by the
 #  classes Kinematic or Diffuse in the
-#  package smoderp2d.src.main_classes.KinematicDiffuse
+#  package smoderp2d.main_classes.KinematicDiffuse
 #
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 
-from smoderp2d.src.tools.tools import comp_type
-import smoderp2d.src.flow_algorithm.mfd as mfd
-import smoderp2d.src.flow_algorithm.D8 as D8_
-import smoderp2d.src.io_functions.prt as prt
+from smoderp2d.tools.tools import comp_type
+import smoderp2d.flow_algorithm.mfd as mfd
+import smoderp2d.flow_algorithm.D8 as D8_
+import smoderp2d.io_functions.prt as prt
 
 
 # Defines methods for executing the one direction flow algorithm D8.
 #
 #  Can be inherited by the Classes:
 #
-#  - smoderp2d.src.main_classes.KinematicDiffuse.Kinematic
-#  - smoderp2d.src.main_classes.KinematicDiffuse.Diffuse
+#  - smoderp2d.main_classes.KinematicDiffuse.Kinematic
+#  - smoderp2d.main_classes.KinematicDiffuse.Diffuse
 #
 class D8(object):
 
@@ -56,7 +56,7 @@ class D8(object):
     # returns the water volume water flows into cell i , j from the previous time step based on the
     # inflows list, \n
     #
-    # inflows list definition is shown in the method  new_inflows() in the package smoderp2d.src.flow_algorithm.D8
+    # inflows list definition is shown in the method  new_inflows() in the package smoderp2d.flow_algorithm.D8
     #
     #  The total inflow is sum of sheet and rill runoff volume.
     #
@@ -87,8 +87,8 @@ class D8(object):
 #
 #  Can be inherited by the Classes:
 #
-#  - smoderp2d.src.main_classes.KinematicDiffuse.Kinematic
-#  - smoderp2d.src.main_classes.KinematicDiffuse.Diffuse
+#  - smoderp2d.main_classes.KinematicDiffuse.Kinematic
+#  - smoderp2d.main_classes.KinematicDiffuse.Diffuse
 #
 #  note: The rill flow, if computed, is always defined in terms
 #  of one directions algorithm. In the class Mfda are therefore

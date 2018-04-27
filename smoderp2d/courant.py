@@ -1,14 +1,14 @@
-# @package smoderp2d.src.courant defines Class Courant which handels the time step adjustement
+# @package smoderp2d.courant defines Class Courant which handels the time step adjustement
 
 
 import math
-import smoderp2d.src.constants as constants
-from smoderp2d.src.tools.tools import comp_type
-from smoderp2d.src.tools.tools import get_argv
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.constants as constants
+from smoderp2d.tools.tools import comp_type
+from smoderp2d.tools.tools import get_argv
+import smoderp2d.io_functions.prt as prt
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 # Contains variables and methods needed for time step size handling
 #

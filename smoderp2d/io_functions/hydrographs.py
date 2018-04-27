@@ -1,13 +1,13 @@
 import sys
 import numpy as np
 import os
-from smoderp2d.src.tools.tools import comp_type
-import smoderp2d.src.io_functions.prt as prt
-from smoderp2d.src.tools.tools import get_argv
-import smoderp2d.src.constants as constants
+from smoderp2d.tools.tools import comp_type
+import smoderp2d.io_functions.prt as prt
+from smoderp2d.tools.tools import get_argv
+import smoderp2d.constants as constants
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 # extraout = get_argv(constants.PARAMETER_EXTRA_OUTPUT)
 

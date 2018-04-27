@@ -1,7 +1,7 @@
 import os
 import sys
 import numpy as np
-import smoderp2d.src.constants as constants
+import smoderp2d.constants as constants
 
 # Class with the debug mark
 #

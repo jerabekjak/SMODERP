@@ -1,9 +1,9 @@
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
-import smoderp2d.src.stream_functions.stream_f as stream_f
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.stream_functions.stream_f as stream_f
+import smoderp2d.io_functions.prt as prt
 
 
 class Reach():

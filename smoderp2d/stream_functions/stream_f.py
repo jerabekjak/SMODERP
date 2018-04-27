@@ -1,8 +1,8 @@
-# @package smoderp2d.src.stream_functions.stream_f Module to calculate the stream reaches runoff.
+# @package smoderp2d.stream_functions.stream_f Module to calculate the stream reaches runoff.
 
 import math
 import sys
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.io_functions.prt as prt
 from inspect import currentframe, getframeinfo
 
 # Jen na debug, umi to zjistit nazev souboru a radek odkud se\n

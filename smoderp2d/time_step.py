@@ -1,18 +1,18 @@
-# @package smoderp2d.src.time_step methods to performe
+# @package smoderp2d.time_step methods to performe
 #  time step, and to store intermeriate variables
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
-import smoderp2d.src.processes.rainfall as rain_f
-import smoderp2d.src.processes.infiltration as infilt
-from smoderp2d.src.tools.tools import comp_type
-import smoderp2d.src.io_functions.prt as prt
+from smoderp2d.main_classes.General import Globals as Gl
+import smoderp2d.processes.rainfall as rain_f
+import smoderp2d.processes.infiltration as infilt
+from smoderp2d.tools.tools import comp_type
+import smoderp2d.io_functions.prt as prt
 import copy
 import numpy as np
 
 
-from smoderp2d.src.main_classes.Surface import runoff
-from smoderp2d.src.main_classes.Surface import surface_retention
+from smoderp2d.main_classes.Surface import runoff
+from smoderp2d.main_classes.Surface import surface_retention
 
 infilt_capa = 0
 infilt_time = 0

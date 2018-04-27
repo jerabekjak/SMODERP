@@ -2,7 +2,7 @@
 #  before data initiation
 
 
-with open('smoderp2d/src/io_functions/txtlogo.txt', 'r') as f:
+with open('smoderp2d/io_functions/txtlogo.txt', 'r') as f:
     d = f.readlines()
 
 try:

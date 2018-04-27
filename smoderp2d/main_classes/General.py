@@ -8,10 +8,10 @@ import sys
 
 
 # get type of computing identifier based on the string
-from smoderp2d.src.tools.tools import comp_type
+from smoderp2d.tools.tools import comp_type
 
-from smoderp2d.src.tools.tools import get_argv
-import smoderp2d.src.constants as constants
+from smoderp2d.tools.tools import get_argv
+import smoderp2d.constants as constants
 
 
 # Documentation for a class.
@@ -293,7 +293,7 @@ class Globals:
 def initLinux():
 
     # get_indata is method which reads the input data
-    from smoderp2d.src.tools.resolve_partial_computing import get_indata_lin
+    from smoderp2d.tools.resolve_partial_computing import get_indata_lin
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -394,7 +394,7 @@ def initLinux():
 def initWin():
 
     # get_indata is method which reads the input data
-    from smoderp2d.src.tools.resolve_partial_computing import get_indata_win
+    from smoderp2d.tools.resolve_partial_computing import get_indata_win
 
     partial_comp = get_argv(constants.PARAMETER_PARTIAL_COMPUTING)
 

@@ -1,4 +1,4 @@
-# @package smoderp2d.src.main_classes.CumulativeMax
+# @package smoderp2d.main_classes.CumulativeMax
 #
 #  package contains classes save the cumulative or maximum
 #  values of the results in each time step.
@@ -11,12 +11,12 @@ import numpy as np
 
 
 # smoderp import
-from smoderp2d.src.main_classes.General import *
-from smoderp2d.src.tools.tools import comp_type
-import smoderp2d.src.io_functions.prt as prt
+from smoderp2d.main_classes.General import *
+from smoderp2d.tools.tools import comp_type
+import smoderp2d.io_functions.prt as prt
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 
 # Max and cumulative values of the subsurface flow
@@ -71,7 +71,7 @@ class CumulativeSubsurface(object):
 
     # Method is used after each time step to save the desired variables.
     #
-    #  Method is called in smoderp2d.src.runoff
+    #  Method is called in smoderp2d.runoff
     #
     def update_cumulative_subsur(self, i, j, sub, q_subsur):
 
@@ -93,7 +93,7 @@ class CumulativeSubsurfacePass(object):
 
     # Method is used after each time step.
     #
-    #  Method is called in smoderp2d.src.runoff
+    #  Method is called in smoderp2d.runoff
     #
 
     def update_cumulative_sur(self, i, j, sub, q_subsur):
@@ -119,7 +119,7 @@ class Cumulative(CumulativeSubsurface if Gl.subflow else CumulativeSubsurfacePas
 
         # Dictionary stores the python arrays identification.
         #
-        #  self.arr is used in the smoderp2d.src.io_functions.post_proc
+        #  self.arr is used in the smoderp2d.io_functions.post_proc
         #
         self.arrs = {1: 'infiltration',
                      2: 'precipitation',
@@ -143,7 +143,7 @@ class Cumulative(CumulativeSubsurface if Gl.subflow else CumulativeSubsurfacePas
 
         # Dictionary stores the the arrays name used in the output rasters.
         #
-        #  self.names is used in the smoderp2d.src.io_functions.post_proc
+        #  self.names is used in the smoderp2d.io_functions.post_proc
         #
         self.names = {1: 'cinfil_m',
                       2: 'crainf_m',
@@ -213,7 +213,7 @@ class Cumulative(CumulativeSubsurface if Gl.subflow else CumulativeSubsurfacePas
 
     # Method is used after each time step to save the desired variables.
     #
-    #  Method is called in smoderp2d.src.runoff
+    #  Method is called in smoderp2d.runoff
     #
     def update_cumulative(self, i, j, surface, subsurface, delta_t):
 

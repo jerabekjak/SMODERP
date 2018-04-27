@@ -1,12 +1,12 @@
 import numpy as np
 import os
-import smoderp2d.src.constants as constants
-from smoderp2d.src.tools.tools import get_argv
-from smoderp2d.src.tools.tools import make_ASC_raster
-from smoderp2d.src.main_classes.General import *
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.constants as constants
+from smoderp2d.tools.tools import get_argv
+from smoderp2d.tools.tools import make_ASC_raster
+from smoderp2d.main_classes.General import *
+import smoderp2d.io_functions.prt as prt
 
-from smoderp2d.src.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Globals as Gl
 
 
 if Gl.prtTimes == '-':

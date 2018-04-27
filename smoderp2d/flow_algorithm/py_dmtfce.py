@@ -1,8 +1,8 @@
 import numpy as np
 import math
 
-import smoderp2d.src.io_functions.prt as prt
-import smoderp2d.src.constants as constants
+import smoderp2d.io_functions.prt as prt
+import smoderp2d.constants as constants
 
 
 def neighbors(i, j, array, x, y):  # function to determine all neighbor cell to actual cell in the raster dataset

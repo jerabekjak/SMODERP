@@ -8,11 +8,11 @@ import math
 import numpy as np
 
 
-import smoderp2d.src.constants as constants
-import smoderp2d.src.flow_algorithm.py_dmtfce as py_dmtfce
+import smoderp2d.constants as constants
+import smoderp2d.flow_algorithm.py_dmtfce as py_dmtfce
 
 
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.io_functions.prt as prt
 
 
 def new_mfda(mat_dmt, mat_nan, mat_fd, vpix, spix, rows, cols):

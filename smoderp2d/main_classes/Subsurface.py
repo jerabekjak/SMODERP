@@ -4,13 +4,13 @@ import sys
 import os
 
 
-from smoderp2d.src.main_classes.General import Globals as Gl
-from smoderp2d.src.main_classes.General import Size
-from smoderp2d.src.main_classes.KinematicDiffuse import *
+from smoderp2d.main_classes.General import Globals as Gl
+from smoderp2d.main_classes.General import Size
+from smoderp2d.main_classes.KinematicDiffuse import *
 
 
-import smoderp2d.src.processes.subsurface as darcy
-import smoderp2d.src.io_functions.prt as prt
+import smoderp2d.processes.subsurface as darcy
+import smoderp2d.io_functions.prt as prt
 
 
 class SubArrs:
