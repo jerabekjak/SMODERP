@@ -77,9 +77,9 @@ def get_indata_lin(tc, args):
         #  output directory is always set
         output = Config.get('Other', 'outdir')
 
-        ##  rainfall data can be saved
-        #if (not(os.path.isfile(Config.get('srazka', 'file')))):
-            #raise RainfallFileMissing(Config.get('srazka', 'file'))
+        #  rainfall data can be saved
+        if (not(os.path.isfile(Config.get('srazka', 'file')))):
+            raise RainfallFileMissing(Config.get('srazka', 'file'))
 
         if Config.get('srazka', 'file') != '-':
             sr, itera = rainfall.load_precipitation(
