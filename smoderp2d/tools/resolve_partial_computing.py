@@ -77,9 +77,9 @@ def get_indata_lin(tc, args):
         #  output directory is always set
         output = Config.get('Other', 'outdir')
 
-        #  rainfall data can be saved
-        if (not(os.path.isfile(Config.get('srazka', 'file')))):
-            raise RainfallFileMissing(Config.get('srazka', 'file'))
+        ##  rainfall data can be saved
+        #if (not(os.path.isfile(Config.get('srazka', 'file')))):
+            #raise RainfallFileMissing(Config.get('srazka', 'file'))
 
         if Config.get('srazka', 'file') != '-':
             sr, itera = rainfall.load_precipitation(
@@ -97,6 +97,12 @@ def get_indata_lin(tc, args):
         if not os.path.exists(output):
             os.makedirs(output)
             # os.makedirs(output+os.sep+'prubeh')
+        
+        # change parametrs of selected matrices for sensitivity analysis
+        mat_aa.fill(Config.getfloat('citlivost', 'A'))
+        mat_b.fill(Config.getfloat('citlivost',  'b'))
+        mat_n.fill(Config.getfloat('citlivost',  'n'))
+        
 
         return boundaryRows, boundaryCols, \
             mat_boundary, rrows, rcols, outletCells, \
