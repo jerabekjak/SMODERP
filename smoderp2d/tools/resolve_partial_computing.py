@@ -100,14 +100,19 @@ def get_indata_lin(tc, args):
         
         # change parametrs of selected matrices for sensitivity analysis
         
+              
         mat_X = mat_aa.copy()
-        mat_X.fill(Config.getfloat('citlivost', 'X'))
         mat_Y = mat_aa.copy()
+        mat_b = mat_aa.copy()
+        mat_n = mat_aa.copy()
+        
+        mat_X.fill(Config.getfloat('citlivost', 'X'))
         mat_Y.fill(Config.getfloat('citlivost', 'Y'))
-        mat_aa = mat_X*mat_slope**mat_Y
         mat_b.fill(Config.getfloat('citlivost',  'b'))
         mat_n.fill(Config.getfloat('citlivost',  'n'))
         
+        mat_aa = mat_X*mat_slope**mat_Y/mat_n
+               
 
         return boundaryRows, boundaryCols, \
             mat_boundary, rrows, rcols, outletCells, \
