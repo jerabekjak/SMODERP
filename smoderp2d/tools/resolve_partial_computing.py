@@ -112,8 +112,7 @@ def get_indata_lin(tc, args):
         mat_n.fill(Config.getfloat('citlivost',  'n'))
         
         mat_aa = mat_X*mat_slope**mat_Y/mat_n
-               
-
+        
         return boundaryRows, boundaryCols, \
             mat_boundary, rrows, rcols, outletCells, \
             x_coordinate, y_coordinate,\
