@@ -97,10 +97,16 @@ def get_indata_lin(tc, args):
         if not os.path.exists(output):
             os.makedirs(output)
             # os.makedirs(output+os.sep+'prubeh')
-        
+        #
+        #
+        #
+        #
         # change parametrs of selected matrices for sensitivity analysis
-        
-              
+        #
+        #
+        #
+        #
+        #
         mat_X = mat_aa.copy()
         mat_Y = mat_aa.copy()
         mat_b = mat_aa.copy()
@@ -110,8 +116,26 @@ def get_indata_lin(tc, args):
         mat_Y.fill(Config.getfloat('citlivost', 'Y'))
         mat_b.fill(Config.getfloat('citlivost',  'b'))
         mat_n.fill(Config.getfloat('citlivost',  'n'))
+        mat_reten.fill(Config.getfloat('citlivost',  'reten'))
+        
         
         mat_aa = mat_X*mat_slope**mat_Y/mat_n
+        
+        combinatIndex[1][1] = Config.getfloat('citlivost',  'Ks')
+        combinatIndex[1][2] = Config.getfloat('citlivost',  'S')
+        
+        
+        #
+        #
+        #
+        #
+        # change parametrs of selected matrices for sensitivity analysis
+        #
+        #
+        #
+        #
+        #
+                
         
         return boundaryRows, boundaryCols, \
             mat_boundary, rrows, rcols, outletCells, \
@@ -130,6 +154,13 @@ def get_indata_lin(tc, args):
     else:
         print "on a linux machine work only roff mode"
         return None
+
+
+
+
+
+
+
 
 
 def get_indata_win(tc, args):
