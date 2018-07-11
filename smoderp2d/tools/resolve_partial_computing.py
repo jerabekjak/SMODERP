@@ -19,6 +19,7 @@ from smoderp2d.tools.tools import prt_sys_argv
 from smoderp2d.tools.tools import int_comp_type
 from smoderp2d.tools.tools import logical_argv
 from smoderp2d.exceptions import RainfallFileMissing
+from numpy import array
 
 #
 # from inspect import currentframe, getframeinfo
@@ -125,6 +126,11 @@ def get_indata_lin(tc, args):
         combinatIndex[1][2] = Config.getfloat('citlivost',  'S')
         
         
+        array_points = array( [[  0., 
+                                Config.getfloat('citlivost',  'row_p'), 
+                                Config.getfloat('citlivost',  'col_p'), 0., 3.]] )
+                        
+                
         #
         #
         #
