@@ -129,7 +129,18 @@ def get_indata_lin(tc, args):
         array_points = array( [[  0., 
                                 Config.getfloat('citlivost',  'row_p'), 
                                 Config.getfloat('citlivost',  'col_p'), 0., 3.]] )
-                        
+        
+        
+        print('X: {} '.format(Config.getfloat('citlivost', 'X')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'Y')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'b')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'n')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'Ks')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'S')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'row_p')))
+        print('X: {} '.format(Config.getfloat('citlivost', 'col_p')))
+        
+        
                 
         #
         #
