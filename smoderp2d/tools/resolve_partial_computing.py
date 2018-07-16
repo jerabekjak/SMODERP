@@ -113,6 +113,7 @@ def get_indata_lin(tc, args):
         mat_b = mat_aa.copy()
         mat_n = mat_aa.copy()
         
+        mat_slope(Config.getfloat('citlivost', 'slope'))
         mat_X.fill(Config.getfloat('citlivost', 'X'))
         mat_Y.fill(Config.getfloat('citlivost', 'Y'))
         mat_b.fill(Config.getfloat('citlivost',  'b'))
@@ -130,7 +131,7 @@ def get_indata_lin(tc, args):
                                 Config.getfloat('citlivost',  'row_p'), 
                                 Config.getfloat('citlivost',  'col_p'), 0., 3.]] )
         
-        print('sklon: {0:.2f} '.format(mat_slope[3][3]))
+        print('sklon: {} '.format(Config.getfloat('citlivost', 'slope')))
         print('X:     {} '.format(Config.getfloat('citlivost', 'X')))
         print('Y:     {} '.format(Config.getfloat('citlivost', 'Y')))
         print('b:     {} '.format(Config.getfloat('citlivost', 'b')))
