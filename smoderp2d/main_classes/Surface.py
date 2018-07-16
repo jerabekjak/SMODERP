@@ -84,6 +84,7 @@ class SurArrs:
         self.h_total_new = float(0)
         self.h_total_pre = float(0)
         self.V_runoff = float(0)
+        self.vel_sheet = float(0)
         # self.V_runoff_pre = float(0)
         self.V_rest = float(0)
         # self.V_rest_pre =   float(0)
@@ -169,7 +170,9 @@ class Surface(Stream if Gl.isStream else StreamPass, Kinematic, Globals, Size):
                         arr.cur_sur_ret) + sep + str(
                             arr.state) + sep + str(
                                 arr.inflow_tm) + sep + str(
-                                    arr.h_total_new)
+                                    arr.h_total_new) + sep + str(
+                                        arr.vel_sheet)
+                                
 
             if self.isRill:
 
@@ -206,13 +209,14 @@ def __runoff(i, j, sur, dt, efect_vrst, ratio):
         v_sheet = q_sheet / sur.h_sheet
     else:
         v_sheet = 0.0
-
+    
     if sur.state > 0:
         q_rill, v_rill, ratio, rill_courant = rill_runoff(
             i, j, sur, dt, efect_vrst, ratio)
     else:
         q_rill, v_rill, ratio, rill_courant = 0, 0, ratio, 0.0
 
+    sur.vel_sheet = v_sheet
     # print 'sur.V_runoff', sur.V_runoff, sur.V_runoff_rill
     return q_sheet, v_sheet, q_rill, v_rill, ratio, rill_courant
 
@@ -235,6 +239,8 @@ def __runoff_zero_compType(i, j, sur, dt, efect_vrst, ratio):
 
     q_rill = 0
     v_rill = 0
+    
+    sur.vel_sheet = v_sheet
 
     return q_sheet, v_sheet, q_rill, v_rill, ratio, 0.0
 
