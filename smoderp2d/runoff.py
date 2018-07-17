@@ -334,12 +334,12 @@ class Runoff():
                 break
 
             timeperc = 100 * (flowControl.total_time + delta_t) / Gl.end_time
-            progress_bar.pb.update(
-                timeperc,
-                delta_t,
-                flowControl.iter_,
-                flowControl.total_time +
-                delta_t)
+            #progress_bar.pb.update(
+                #timeperc,
+                #delta_t,
+                #flowControl.iter_,
+                #flowControl.total_time +
+                #delta_t)
 
             # Calculate outflow from each reach of the stream network
             surface.stream_reach_outflow(delta_t)
@@ -399,7 +399,7 @@ class Runoff():
             "-----------------------------------------------------------")
         prt.message('Total computing time: ', str(time.time() - start))
 
-        post_proc.do(cumulative, Gl.mat_slope, Gl, surface.arr)
+        #post_proc.do(cumulative, Gl.mat_slope, Gl, surface.arr)
 
         # tools.make_sur_raster(surface.arr,Globals,total_time+delta_t,output)
         # tools.make_sub_raster(subsurface.arr,Globals,total_time+delta_t,output)
