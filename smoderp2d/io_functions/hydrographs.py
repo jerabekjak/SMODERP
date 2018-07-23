@@ -175,8 +175,6 @@ class Hydrographs:
                     linebil = surface.return_str_vals(l, m, sep, dt, extraout)
                     line += linebil[0] + sep
                     line += str(linebil[1])  # + sep
-                    # line += subsurface.return_str_vals(l,m,sep,dt) + sep   #
-                    # prozatim
                     if extraout:
                         line += sep + str(surface.arr[l][m].V_to_rill) + sep
                         line += str(ratio) + sep
