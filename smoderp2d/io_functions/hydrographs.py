@@ -9,10 +9,6 @@ import smoderp2d.constants as constants
 
 from smoderp2d.main_classes.General import Globals as Gl
 
-# extraout = get_argv(constants.PARAMETER_EXTRA_OUTPUT)
-
-# rill, subflow, stream, diffuse = comp_type()
-
 rill = Gl.isRill
 subflow = Gl.subflow
 stream = Gl.isStream
@@ -46,11 +42,6 @@ class Hydrographs:
             for jp in [3, 4]:
                 point_int[ip][jp] = points[ip][jp]
 
-        # for ttt in point_int:
-            # print ttt
-
-        # tento cylkus meze budy, ktere jsou
-        # v i,j cylku o jednu vedle rrows a rcols
         outsideDomain = False
         del_ = []
         for ip in range(ipi):
@@ -67,18 +58,8 @@ class Hydrographs:
         point_int = [i for j, i in enumerate(point_int) if j not in del_]
         ipi -= len(del_)
 
-        # for ttt in point_int:
-        # print ttt
-
-        # for ip in range(ipi):
-        # l = point_int[ip][1]
-        # m = point_int[ip][2]
-        # print mat_tok_usek[ip][jp]
-
         counter = 0
 
-        # mat_tok_usek is alway presented if stream == True
-        # if (mat_tok_usek != None) and (stream == True):
         if (stream):
             for ip in range(ipi):
                 l = point_int[ip][1]
@@ -102,8 +83,6 @@ class Hydrographs:
         self.rill = rill
         self.stream = stream
         self.pixel_area = pixel_area
-        # print self.point_int
-        # raw_input()
 
         iStream = 0
         iSurface = 0
@@ -207,14 +186,6 @@ class Hydrographs:
 
                     line += '\n'
                     self.files[ip].writelines(line)
-
-    # def write_hydrographs_usek(self,dt,total_time,surface,currRain,sep=';'):
-        # line = str(total_time) + sep
-        # line += str(dt) + sep
-        # line += str(currRain) + sep
-        # line += surface.return_stream_str_vals(0,0,sep,dt)
-        # line += '\n'
-        # self.tokusek.writelines(line)
 
     def closeHydrographs(self):
         for i in range(self.n):
