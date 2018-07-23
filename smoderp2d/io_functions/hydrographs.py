@@ -83,6 +83,10 @@ class Hydrographs:
         self.rill = rill
         self.stream = stream
         self.pixel_area = pixel_area
+        
+        # minimal time interval to record the next line into hydrograph file
+        self.min_dt_iterval = 1 # [sec]
+        self.old_total_time = 0
 
         iStream = 0
         iSurface = 0
@@ -149,41 +153,43 @@ class Hydrographs:
         ratio = fc.ratio
         total_time = fc.total_time + dt
         iter_ = fc.iter_
+        
+        if ((total_time - self.old_total_time) > self.min_dt_iterval) : 
 
-        courantMost = courant.cour_most
-        courantRill = courant. cour_most_rill
+            courantMost = courant.cour_most
+            courantRill = courant. cour_most_rill
 
-        if inStream:
-            for ip in self.inStream:
-                l = self.point_int[ip][1]
-                m = self.point_int[ip][2]
-                line = str(total_time) + sep
-                line += str(dt) + sep
-                line += str(currRain) + sep
-                line += surface.return_stream_str_vals(l, m, sep, dt, extraout)
-                line += '\n'
-                self.files[ip].writelines(line)
-
-        else:
-            for ip in self.inSurface:
-                l = self.point_int[ip][1]
-                m = self.point_int[ip][2]
-                if i == l and j == m:
+            if inStream:
+                for ip in self.inStream:
+                    l = self.point_int[ip][1]
+                    m = self.point_int[ip][2]
                     line = str(total_time) + sep
                     line += str(dt) + sep
                     line += str(currRain) + sep
-                    linebil = surface.return_str_vals(l, m, sep, dt, extraout)
-                    line += linebil[0] + sep
-                    line += str(linebil[1])  # + sep
-                    if extraout:
-                        line += sep + str(surface.arr[l][m].V_to_rill) + sep
-                        line += str(ratio) + sep
-                        line += str(courantMost) + sep
-                        line += str(courantRill) + sep
-                        line += str(iter_)
-
+                    line += surface.return_stream_str_vals(l, m, sep, dt, extraout)
                     line += '\n'
                     self.files[ip].writelines(line)
+
+            else:
+                for ip in self.inSurface:
+                    l = self.point_int[ip][1]
+                    m = self.point_int[ip][2]
+                    if i == l and j == m:
+                        line = str(total_time) + sep
+                        line += str(dt) + sep
+                        line += str(currRain) + sep
+                        linebil = surface.return_str_vals(l, m, sep, dt, extraout)
+                        line += linebil[0] + sep
+                        line += str(linebil[1])  # + sep
+                        if extraout:
+                            line += sep + str(surface.arr[l][m].V_to_rill) + sep
+                            line += str(ratio) + sep
+                            line += str(courantMost) + sep
+                            line += str(courantRill) + sep
+                            line += str(iter_)
+
+                        line += '\n'
+                        self.files[ip].writelines(line)
 
     def closeHydrographs(self):
         for i in range(self.n):
