@@ -168,6 +168,10 @@ def init_classes():
     courant = Courant()
     delta_t = courant.initial_time_step(surface)
     courant.set_time_step(delta_t)
+    
+    if (delta_t>1.0):
+        print 'initial time step cannot be larger that 1 sec.'
+        sys.exit()
 
     prt.message('Corrected time step is', delta_t, '[s]')
 
