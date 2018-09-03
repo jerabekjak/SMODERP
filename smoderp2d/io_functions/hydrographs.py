@@ -84,6 +84,10 @@ class Hydrographs:
         self.stream = stream
         self.pixel_area = pixel_area
         
+        
+        self.rec_time = 0
+        self.rec_step = 0
+        
         # minimal time interval to record the next line into hydrograph file
         self.min_dt_iterval = 1 # [sec]
         self.old_total_time = 0
