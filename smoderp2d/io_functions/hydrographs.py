@@ -180,8 +180,8 @@ class Hydrographs:
                         line += str(currRain) + sep
                         linebil = surface.return_str_vals(l, m, sep, dt, extraout)
                         line += linebil[0] 
-                        line += str(linebil[1])  # + sep
                         if extraout:
+                            line += sep + str(linebil[1]) 
                             line += sep + str(surface.arr[l][m].V_to_rill) + sep
                             line += str(ratio) + sep
                             line += str(courantMost) + sep
