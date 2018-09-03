@@ -209,14 +209,10 @@ class TimeStep:
                 else:
                     surface.arr[i][j].h_total_new = surBIL
 
-                # print surface.arr[i][j].h_sheet,
-                # surface.arr[i][j].h_total_pre, infiltration, actRain,
-                # surface.arr[i][j].inflow_tm/pixel_area
+
                 surface_state = surface.arr[i][j].state
                 # subsurface inflow
         
-        
-                print surface
                 hydrographs.write_hydrographs_record(
                     i,
                     j,
