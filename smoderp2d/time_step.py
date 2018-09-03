@@ -214,17 +214,9 @@ class TimeStep:
                 # surface.arr[i][j].inflow_tm/pixel_area
                 surface_state = surface.arr[i][j].state
                 # subsurface inflow
-                """
-        inflow_sub = subsurface.cell_runoff(i,j,False)
-        subsurface.bilance(i,j,infiltration,inflow_sub/pixel_area,delta_t)
-        subsurface.fill_slope()
-        """
-                #cumulative.update_cumulative(
-                    #i,
-                    #j,
-                    #surface.arr[i][j],
-                    #subsurface,
-                    #delta_t)
+        
+        
+                print surface
                 hydrographs.write_hydrographs_record(
                     i,
                     j,
