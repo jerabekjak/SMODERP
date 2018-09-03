@@ -219,12 +219,12 @@ class TimeStep:
         subsurface.bilance(i,j,infiltration,inflow_sub/pixel_area,delta_t)
         subsurface.fill_slope()
         """
-                cumulative.update_cumulative(
-                    i,
-                    j,
-                    surface.arr[i][j],
-                    subsurface,
-                    delta_t)
+                #cumulative.update_cumulative(
+                    #i,
+                    #j,
+                    #surface.arr[i][j],
+                    #subsurface,
+                    #delta_t)
                 hydrographs.write_hydrographs_record(
                     i,
                     j,
