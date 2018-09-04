@@ -188,8 +188,11 @@ def init_classes():
     # based on Courant condition
     courant = Courant()
     delta_t = courant.initial_time_step(surface)
-    print delta_t
-    raw_input()
+    
+    if delta_t>1.0 :
+        print '\n!!! In this branch only time step lower or equal one is allowed !!!\n'
+        sys.exit()
+        
     courant.set_time_step(delta_t)
     
     if (delta_t>1.0):

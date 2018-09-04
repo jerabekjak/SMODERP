@@ -128,7 +128,6 @@ class TimeStep:
                 delta_t,
                 fc.total_time - infilt_time,
                 NoDataValue)
-            # print total_time-infilt_time, iii[3]*1000, k, s
 
         infilt.set_combinatIndex(combinatIndex)
 
@@ -141,15 +140,9 @@ class TimeStep:
         subsurface.fill_slope()
         subsurface.new_inflows()
 
-        # print 'bbilll'
         for i in rr:
             for j in rc[i]:
 
-                # print i,j, surface.arr[i][j].h_total_pre, surface.arr[i][j].V_runoff
-                #
-                # current cell precipitation
-                #
-                # print rain_arr.arr[i][j], potRain, sum_interception
                 actRain, fc.sum_interception, rain_arr.arr[i][j].veg_true = rain_f.current_rain(
                     rain_arr.arr[i][j], potRain, fc.sum_interception)
                 surface.arr[i][j].cur_rain = actRain
@@ -222,6 +215,5 @@ class TimeStep:
                         surface,
                         subsurface,
                         actRain)
-        print flowControl.write_hyd
-        #raw_input()
+                    
         return actRain
