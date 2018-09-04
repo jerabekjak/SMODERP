@@ -134,17 +134,18 @@ class FlowControl():
     
     # check if it is time to record data given by timestep rec_step
     def check_record(self,dt):
+        self.write_hyd = False
         if ((self.total_time <= self.rec_time) & (self.rec_time < self.total_time + dt)):
             if (self.total_time == self.rec_time) :
                 self.rec_time += self.rec_step
-                self.write_hyd == True
+                self.write_hyd = True
                 return dt
             else :
                 dt = self.rec_time-self.total_time
                 self.rec_time += self.rec_step
-                self.write_hyd == False
+                self.write_hyd = True
                 return dt
-        self.write_hyd == False
+        
         return dt
         
 
@@ -310,6 +311,18 @@ class Runoff():
                     potRain, delta_t, Gl.dx, flowControl.ratio)
                 
                 delta_t = flowControl.check_record(delta_t)
+                if (flowControl.write_hyd) :
+                    flowControl.upload_iter()
+                    flowControl.restore_vars()
+                    courant.reset()
+                    flowControl.save_ratio()
+                    potRain = time_step.do_flow(
+                        surface,
+                        subsurface,
+                        delta_t,
+                        flowControl,
+                        courant)
+                    break
                 
                 # I courant conditions is satisfied (time step did change) the
                 # iteration loop breaks

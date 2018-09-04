@@ -212,15 +212,16 @@ class TimeStep:
 
                 surface_state = surface.arr[i][j].state
                 # subsurface inflow
-        
-                hydrographs.write_hydrographs_record(
-                    i,
-                    j,
-                    flowControl,
-                    courant,
-                    delta_t,
-                    surface,
-                    subsurface,
-                    actRain)
-
+                if flowControl.write_hyd :
+                    hydrographs.write_hydrographs_record(
+                        i,
+                        j,
+                        flowControl,
+                        courant,
+                        delta_t,
+                        surface,
+                        subsurface,
+                        actRain)
+        print flowControl.write_hyd
+        #raw_input()
         return actRain
