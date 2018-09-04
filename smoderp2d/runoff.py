@@ -84,6 +84,11 @@ class FlowControl():
 
         # current number of wihtin time step iterations
         self.iter_ = 0
+        
+
+        self.rec_time = 1.0
+        self.rec_time = 1.0
+        self.write_hyd = False
 
     # store tz and sum of interception
     # in case of repeating time time stem iteration
@@ -231,11 +236,6 @@ class Runoff():
 
     # Method run call method for initialization
     #  and contains the main time loop
-    def __init__(self):
-        self.rec_time = 1.0
-        self.rec_time = 1.0
-        self.write_hyd = False
-
     def run(self):
 
         # delta_t, times_prt, infiltrationType, total_time, tz,
@@ -293,6 +293,8 @@ class Runoff():
                 # condition)
                 delta_t, flowControl.ratio = courant.courant(
                     potRain, delta_t, Gl.dx, flowControl.ratio)
+                
+                
                 
                 # I courant conditions is satisfied (time step did change) the
                 # iteration loop breaks
