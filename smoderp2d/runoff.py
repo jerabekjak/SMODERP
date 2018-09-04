@@ -87,7 +87,7 @@ class FlowControl():
         
 
         self.rec_time = 1.0
-        self.rec_time = 1.0
+        self.rec_step = 1.0
         self.write_hyd = False
 
     # store tz and sum of interception
@@ -131,7 +131,22 @@ class FlowControl():
     # checkes it end time is reached
     def compare_time(self, end_time):
         return self.total_time < end_time
-
+    
+    # check if it is time to record data given by timestep rec_step
+    def check_record(self,dt):
+        if ((self.total_time <= self.rec_time) & (self.rec_time < self.total_time + dt)):
+            if (self.total_time == self.rec_time) :
+                self.rec_time += self.rec_step
+                self.write_hyd == True
+                return dt
+            else :
+                dt = self.rec_time-self.total_time
+                self.rec_time += self.rec_step
+                self.write_hyd == False
+                return dt
+        self.write_hyd == False
+        return dt
+        
 
 # Initialize main classes
 #
@@ -294,7 +309,7 @@ class Runoff():
                 delta_t, flowControl.ratio = courant.courant(
                     potRain, delta_t, Gl.dx, flowControl.ratio)
                 
-                
+                delta_t = flowControl.check_record(delta_t)
                 
                 # I courant conditions is satisfied (time step did change) the
                 # iteration loop breaks
