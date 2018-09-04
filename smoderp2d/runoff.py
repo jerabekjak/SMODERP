@@ -366,8 +366,6 @@ class Runoff():
                 subsurface,
                 actRain,
                 True)
-            if ((flowControl.total_time - hydrographs.old_total_time) > hydrographs.min_dt_iterval) : 
-                hydrographs.old_total_time = flowControl.total_time
 
             # print raster results in given time steps
             times_prt.prt(flowControl.total_time, delta_t, surface)
